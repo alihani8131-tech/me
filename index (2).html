@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مساعد مذاكرة جامعة حورس (HUE) | رفيق الدراسة الذكي</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card-hover: #26354d;
+    --primary: #38bdf8;
+    --primary-dark: #0284c7;
+    --accent: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --border: #334155;
+  }
+  * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding-bottom: 60px;
+  }
+  header {
+    background: linear-gradient(135deg, #0c4a6e, #1e293b);
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.45rem; color: var(--primary); }
+  header p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+  .container { max-width: 960px; margin: 20px auto; padding: 0 16px; }
+  .tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    background: var(--card);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 120px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--primary-dark);
+    color: #fff;
+  }
+  .section { display: none; }
+  .section.active { display: block; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  .card h2, .card h3 { margin-top: 0; color: var(--primary); }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: var(--muted); }
+  select, input[type="text"], textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #0f172a;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+  textarea { min-height: 110px; resize: vertical; }
+  .btn {
+    background: var(--primary-dark);
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+  }
+  .btn:hover { background: var(--primary); color: #0f172a; }
+  .btn-green { background: #059669; }
+  .btn-green:hover { background: var(--accent); color: #0f172a; }
+  .btn-warn { background: #d97706; }
+  .btn-danger { background: #dc2626; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .lecture-item {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .lecture-item h4 { margin: 0 0 6px; color: #fff; }
+  .lecture-item p { margin: 0 0 10px; color: var(--muted); font-size: 0.9rem; direction: ltr; text-align: left; }
+  .quiz-box {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .quiz-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    direction: ltr;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .quiz-option:hover { border-color: var(--primary); }
+  .quiz-option.correct { background: rgba(16, 185, 129, 0.25); border-color: var(--accent); }
+  .quiz-option.wrong { background: rgba(239, 68, 68, 0.25); border-color: var(--danger); }
+  .flashcard {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 2px solid var(--primary-dark);
+    border-radius: 14px;
+    padding: 24px;
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    direction: ltr;
+    margin-bottom: 12px;
+  }
+  .stat-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .stat-box {
+    flex: 1;
+    min-width: 130px;
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-box strong { display: block; font-size: 1.4rem; color: var(--primary); }
+  .drop-zone {
+    border: 2px dashed var(--primary);
+    border-radius: 12px;
+    padding: 22px;
+    text-align: center;
+    background: rgba(56, 189, 248, 0.05);
+    cursor: pointer;
+    margin-bottom: 14px;
+  }
+  .toast {
+    position: fixed;
+    bottom: 18px;
+    left: 18px;
+    background: var(--accent);
+    color: #0f172a;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 8px;
+    display: none;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎓 رفيق مذاكرة جامعة حورس (HUE Study Companion)</h1>
+  <p>كلية تكنولوجيا العلوم الصحية التطبيقية • محاضراتك + إضافة يدوية للملفات + توليد أسئلة اليوم تلقائياً</p>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('today')">📅 مهام وأسئلة اليوم</button>
+    <button class="tab-btn" onclick="switchTab('upload')">➕ إضافة ملفات / محاضرة يدوياً</button>
+    <button class="tab-btn" onclick="switchTab('library')">📚 مكتبة المحاضرات (84+)</button>
+    <button class="tab-btn" onclick="switchTab('flashcards')">🃏 بطاقات المراجعة</button>
+  </div>
+
+  <!-- 1. مهام وأسئلة اليوم -->
+  <div id="tab-today" class="section active">
+    <div class="stat-row">
+      <div class="stat-box"><strong id="stat-total">0</strong><span>إجمالي المحاضرات</span></div>
+      <div class="stat-box"><strong id="stat-done">0</strong><span>تمت مذاكرتها</span></div>
+      <div class="stat-box"><strong id="stat-score">0%</strong><span>دقة اختبار اليوم</span></div>
+    </div>
+
+    <div class="card">
+      <h2>🎯 اختبار اليوم التلقائي (Auto Daily Quiz)</h2>
+      <p style="color:var(--muted); margin-top:0;">اختر المادة أو اتركها "كل المواد" ليقوم التطبيق بتوليد أسئلة اختيار من متعدد تلقائياً من محتوى المحاضرات.</p>
+      <div class="grid-2">
+        <div>
+          <label>اختر المادة لتوليد الأسئلة منها:</label>
+          <select id="quiz-subject-filter" onchange="generateDailyQuiz()">
+            <option value="ALL">كل المواد (مراجعة شاملة لليوم)</option>
+          </select>
+        </div>
+        <div>
+          <label>عدد الأسئلة:</label>
+          <select id="quiz-count" onchange="generateDailyQuiz()">
+            <option value="5">5 أسئلة سريعة</option>
+            <option value="8" selected>8 أسئلة (موصى به)</option>
+            <option value="12">12 سؤال (مراجعة مكثفة)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-green" onclick="generateDailyQuiz()">🔄 توليد أسئلة جديدة الآن</button>
+      <div id="quiz-container" style="margin-top:16px;"></div>
+    </div>
+  </div>
+
+  <!-- 2. إضافة ملفات يدوي -->
+  <div id="tab-upload" class="section">
+    <div class="card">
+      <h2>📂 رفع ملف محاضرة أو ملخص (CSV / TXT / MD)</h2>
+      <p style="color:var(--muted);">ارفع ملف الشيت (`.csv`) أو أي ملف نصي لمحاضرة جديدة، وسيقوم التطبيق بإضافته فوراً وتوليد أسئلة اليوم منه تلقائياً بدون الحاجة لـ Power Automate أو برمجة.</p>
+      
+      <div class="drop-zone" onclick="document.getElementById('file-input').click()">
+        <strong>اضغط هنا لاختيار ملف من جهازك (.csv أو .txt)</strong>
+        <p style="margin:6px 0 0; font-size:0.85rem; color:var(--muted);">يدعم ملفات الشيت (Title, Subject, Content) أو ملفات النصوص العادية</p>
+        <input type="file" id="file-input" accept=".csv,.txt,.md" style="display:none" onchange="handleFileUpload(event)">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>✍️ أو أضف محاضرة / ملاحظات يدوياً بالنسخ واللصق</h2>
+      <label>اسم المادة:</label>
+      <input type="text" id="manual-subject" list="subjects-datalist" placeholder="مثال: Biophysics (FAC-104)">
+      <datalist id="subjects-datalist"></datalist>
+
+      <label>عنوان المحاضرة:</label>
+      <input type="text" id="manual-title" placeholder="مثال: Lecture 13: Hemodialysis Machine Biophysics">
+
+      <label>محتوى المحاضرة أو النقاط المهمة (سيتم توليد الأسئلة من هذا النص تلقائياً):</label>
+      <textarea id="manual-content" placeholder="الصق هنا ملخص المحاضرة أو النقاط الأساسية بالإنجليزية أو العربية..."></textarea>
+
+      <button class="btn btn-green" onclick="addManualLecture()">✅ حفظ المحاضرة وتوليد أسئلتها فوراً</button>
+    </div>
+
+    <div class="card">
+      <h3>⚙️ إدارة البيانات والنسخ الاحتياطي</h3>
+      <button class="btn btn-outline" onclick="exportCSV()">⬇️ تحميل كل المحاضرات كملف CSV</button>
+      <button class="btn btn-danger" onclick="resetToDefault()" style="margin-right:8px;">♻️ استعادة الـ 84 محاضرة الأصلية</button>
+    </div>
+  </div>
+
+  <!-- 3. مكتبة المحاضرات -->
+  <div id="tab-library" class="section">
+    <div class="card">
+      <h2>📚 تصفح جميع المحاضرات</h2>
+      <div class="grid-2">
+        <div>
+          <label>تصفية حسب المادة:</label>
+          <select id="lib-subject-filter" onchange="renderLibrary()">
+            <option value="ALL">جميع المواد</option>
+          </select>
+        </div>
+        <div>
+          <label>بحث في العنوان أو المحتوى:</label>
+          <input type="text" id="lib-search" oninput="renderLibrary()" placeholder="ابحث عن كلمة مفتاحية...">
+        </div>
+      </div>
+      <div id="library-list"></div>
+    </div>
+  </div>
+
+  <!-- 4. بطاقات المراجعة -->
+  <div id="tab-flashcards" class="section">
+    <div class="card">
+      <h2>🃏 بطاقات المراجعة السريعة (Flashcards)</h2>
+      <label>اختر المادة:</label>
+      <select id="fc-subject-filter" onchange="initFlashcards()">
+        <option value="ALL">كل المواد</option>
+      </select>
+      <div id="flashcard-box" class="flashcard" onclick="flipFlashcard()">
+        <div class="badge" id="fc-badge">Subject</div>
+        <h3 id="fc-front" style="color:#fff; margin:8px 0;">اضغط لبدء المراجعة</h3>
+        <p id="fc-back" style="color:var(--primary); display:none; font-size:0.95rem;"></p>
+        <small style="color:var(--muted); margin-top:10px;">(اضغط على البطاقة لقلبها)</small>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button class="btn btn-outline" onclick="prevFlashcard()">⬅️ السابقة</button>
+        <button class="btn" onclick="nextFlashcard()">التالية ➡️</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const DEFAULT_LECTURES = [{"Title": "Lecture 1: Introduction to Biophysics, Physical Quantities, Units & Measurements in Medicine", "Subject": "Biophysics (FAC-104)", "Content": "Definition of biophysics as the bridge between biology and physics. Fundamental vs. derived physical quantities (length, mass, time, electric current, temperature). SI units and medical conversions (mmHg to Pa, calories to Joules, cmH2O). Dimensional analysis in biomedical formulas. Precision, accuracy, systematic errors, and random errors in physiological measurements. Calibration of clinical equipment and diagnostic sensors."}, {"Title": "Lecture 2: Biomechanics, Forces on the Body, Levers & Center of Gravity", "Subject": "Biophysics (FAC-104)", "Content": "Newton's laws of motion applied to human movement. Statics and dynamics of the musculoskeletal system. Force vectors, torque (moment of force: tau = F * d * sin(theta)), and equilibrium conditions (Sigma F = 0, Sigma tau = 0). Classes of anatomical levers: first-class (atlanto-occipital joint / neck extension), second-class (standing on tiptoes / calf muscle), third-class (biceps brachii flexion). Mechanical advantage. Center of gravity (COG), line of gravity, and base of support in posture and stability. Friction and joint lubrication (synovial fluid)."}, {"Title": "Lecture 3: Fluid Mechanics, Blood Flow, Viscosity, Bernoulli Principle & Blood Pressure", "Subject": "Biophysics (FAC-104)", "Content": "Hydrostatics and hydrodynamics in cardiovascular physiology. Density, pressure, and hydrostatic pressure (P = rho * g * h). Pascal's principle. Laminar vs. turbulent flow (Reynolds number Re = rho * v * D / eta). Poiseuille's law of fluid resistance (Flow Q = Delta P * pi * r^4 / (8 * eta * L)) and physiological significance of vessel radius. Viscosity of blood and hematocrit dependence. Bernoulli's principle and continuity equation (A1*v1 = A2*v2) in arterial stenosis and aneurysms. Hemodynamics, systolic/diastolic blood pressure, pulse pressure, mean arterial pressure (MAP = DBP + 1/3(SBP - DBP)), and sphygmomanometry."}, {"Title": "Lecture 4: Heat, Thermodynamics in the Human Body, Thermoregulation & Clinical Thermometry", "Subject": "Biophysics (FAC-104)", "Content": "Laws of thermodynamics applied to biological open systems. First law (energy conservation, Delta U = Q - W) and basal metabolic rate (BMR). Second law, entropy, and heat dissipation. Heat transfer mechanisms: conduction, convection, radiation (Stefan-Boltzmann law), and evaporation (sweating and latent heat). Human thermoregulation, core vs. shell temperature, hypothalamus set-point. Hyperthermia, hypothermia, and therapeutic hypothermia. Clinical thermometry principles: mercury, digital thermistors, thermocouples, and infrared tympanic/cutaneous thermography."}, {"Title": "Lecture 5: Sound Waves, Acoustics, Ultrasound Physics & Doppler Effect in Medical Imaging", "Subject": "Biophysics (FAC-104)", "Content": "Nature and characteristics of acoustic waves: frequency (f), wavelength (lambda), velocity (v = f * lambda), amplitude, and acoustic intensity (I = P/A, decibel scale). Infrasound, audible sound, and ultrasound (> 20 kHz, diagnostic range 2-15 MHz). Piezoelectric effect in transducer crystal design. Acoustic impedance (Z = rho * v) and reflection/refraction at tissue interfaces. Attenuation coefficient, absorption, and scattering in biological tissue. Diagnostic ultrasound modes: A-mode, B-mode (2D brightness), and M-mode. Doppler ultrasound principle (Delta f = 2 * f0 * v * cos(theta) / c) for measuring blood flow velocity and detecting vascular pathologies."}, {"Title": "Lecture 6: Linear Absorption, Attenuation of Radiation & Beer-Lambert Law", "Subject": "Biophysics (FAC-104)", "Content": "Principles of light and radiation absorption. Transmittance (T = I / I0) and absorbance (optical density A = -log10(T)). The Beer-Lambert law: A = epsilon * c * l (molar absorptivity, concentration, optical path length). Derivation of linear attenuation coefficient (mu) for narrow-beam geometry (I = I0 * e^(-mu * x)). Half-value layer (HVL = 0.693 / mu) and tenth-value layer (TVL). Mass attenuation coefficient (mu / rho). Spectrophotometry instrumentation: light source, monochromator, cuvette, and photodetector. Clinical laboratory applications: hemoglobinometry, enzyme kinetics, bilirubin quantification, and pulse oximetry."}, {"Title": "Lecture 7: Electricity & Magnetism in Medicine, Bioelectric Potentials (ECG, EEG, EMG)", "Subject": "Biophysics (FAC-104)", "Content": "Ionic basis of resting membrane potential (Nernst equation E = (RT / zF) * ln([ion]out / [ion]in) and Goldman-Hodgkin-Katz equation). Action potential generation, depolarization, repolarization, and refractory periods. Volume conductor physics and electrical dipole model. Electrocardiography (ECG/EKG): Einthoven triangle, standard leads, and cardiac conduction vector. Electroencephalography (EEG): cerebral rhythms (alpha, beta, theta, delta waves). Electromyography (EMG): motor unit action potentials (MUAP). Electrical safety in medical environments: macroshock, microshock, leakage currents, and patient grounding. Magnetic fields in medicine and principles of magnetic resonance."}, {"Title": "Lecture 8: Nuclei, Particles & Radioactivity (Z, A, Half-Life, Radioactive Decay & Shielding)", "Subject": "Biophysics (FAC-104)", "Content": "Atomic and nuclear structure: atomic number (Z), mass number (A), isotopes, isobars, and nuclear binding energy. Nuclear stability and N/Z ratio. Law of radioactive decay: N(t) = N0 * e^(-lambda * t). Activity (Becquerel Bq, Curie Ci). Radioactive half-life (T1/2 = ln(2) / lambda = 0.693 / lambda) and biological vs. effective half-life (1/Teff = 1/Tphys + 1/Tbio). Decay modes: Alpha (alpha) emission, Beta-minus (beta-) and Beta-plus (beta+ / positron) decay, Electron Capture, and Gamma (gamma) transition / isomeric state. Interaction of radiation with matter and shielding requirements: heavy alpha stopped by paper/skin, beta stopped by aluminum/plastic, gamma/X-rays attenuated by lead and concrete."}, {"Title": "Lecture 9: X-Ray Production, Bremsstrahlung, Characteristic Radiation & Diagnostic Imaging", "Subject": "Biophysics (FAC-104)", "Content": "X-ray tube physics: cathode filament heating (thermionic emission), potential difference (kVp), anode target material (Tungsten/Rhenium), rotating anode design, and focal spot size. Mechanisms of X-ray emission: Bremsstrahlung (braking radiation, continuous spectrum) and Characteristic X-rays (inner-shell ionization, discrete line spectrum). Tube current (mA) and exposure time (s) governing photon quantity (mAs); tube voltage (kVp) governing photon quality/penetrability. Photon interactions with patient tissue: Coherent scattering, Photoelectric effect (predominant at low energy, Z^3 dependence, diagnostic contrast), and Compton scattering (incoherent, predominant at therapy/high energy, source of occupational scatter). Contrast, spatial resolution, and radiographic image formation."}, {"Title": "Lecture 10: Optics, Light Interaction with Tissue, Lasers & Endoscopy in Medicine", "Subject": "Biophysics (FAC-104)", "Content": "Geometric and physical optics in vision and diagnostic tools. Refraction, Snell's law (n1 * sin(theta1) = n2 * sin(theta2)), lenses, diopters (P = 1/f), and ocular refractive errors (myopia, hyperopia, astigmatism). Total internal reflection and optical fiber physics in medical endoscopy and laparoscopy. Principles of Laser (Light Amplification by Stimulated Emission of Radiation): stimulated emission, population inversion, optical pumping, and cavity resonator. Laser beam characteristics: monochromaticity, coherence, collimation, and high radiance. Medical laser types (CO2, Nd:YAG, Argon, Excimer). Photothermal, photochemical, and photomechanical tissue interactions in phototherapy, surgical ablation, and ophthalmology."}, {"Title": "Lecture 11: Radiation Dosimetry, Biological Effects of Ionizing Radiation & Radiation Protection (ALARA)", "Subject": "Biophysics (FAC-104)", "Content": "Radiation dosimetry quantities and SI units: Exposure (Roentgen, C/kg), Absorbed Dose (Gray Gy = 1 J/kg, rad), Equivalent Dose (Sievert Sv, rem; H = D * wR), and Effective Dose (E = Sigma wT * HT). Direct vs. indirect radiation damage: radiolysis of water and reactive oxygen species (ROS/free radicals). Biological effects: Deterministic (tissue reactions with threshold dose, e.g., erythema, cataract, acute radiation syndrome) vs. Stochastic (probabilistic without threshold, e.g., radiation-induced cancer, hereditary mutations). Radiosensitivity and Law of Bergonie and Tribondeau. Radiation protection fundamentals: ALARA principle (As Low As Reasonably Achievable), three golden cardinal rules (Time, Distance - Inverse Square Law I1/I2 = d2^2/d1^2, Shielding), and personal dosimeters (TLD, OSL, film badges)."}, {"Title": "Lecture 12: Comprehensive Final Revision & Clinical Biophysics Problem Solving", "Subject": "Biophysics (FAC-104)", "Content": "Comprehensive review and problem-solving across all course modules. Numerical calculations: blood pressure and mean arterial pressure; Poiseuille flow and resistance; radioactive decay equations (activity, half-life T1/2 = 0.693/lambda, shielding HVL); Beer-Lambert law calculations; acoustic impedance and ultrasound reflection coefficient; inverse square law for radiation exposure. Synthesis of clinical biophysical instrumentation: ECG vectors, diagnostic X-ray parameter optimization (kVp/mAs), ultrasound Doppler interpretation, laser safety classes, and radiation protection protocols in hospital radiology units. Preparation for final summative examinations."}, {"Title": "Lecture 1: Anatomical Position, Planes, Directional Terms & Body Cavities", "Subject": "Human Anatomy for Technologists", "Content": "Standard anatomical position definition and clinical importance. Anatomical body planes: Sagittal (mid-sagittal, parasagittal), Coronal (frontal), and Transverse (axial/horizontal) planes and their direct correlation with CT/MRI cross-sectional views. Directional terms: superior/inferior, anterior/posterior (ventral/dorsal), medial/lateral, proximal/distal, superficial/deep, unilateral/bilateral, ipsilateral/contralateral. Body cavities: dorsal cavity (cranial cavity, vertebral canal) and ventral cavity (thoracic cavity, abdominopelvic cavity). Serous membranes: parietal and visceral pleura, pericardium, and peritoneum. Abdominopelvic quadrants (4) and clinical regions (9)."}, {"Title": "Lecture 2: Skeletal System Overview, Bone Classification, Structure & Ossification", "Subject": "Human Anatomy for Technologists", "Content": "Functions of the human skeleton: support, protection, mineral storage (calcium/phosphate), hematopoiesis, and locomotion. Bone classification by morphology: long bones (femur, humerus), short bones (carpals, tarsals), flat bones (cranial bones, sternum, scapula), irregular bones (vertebrae), and sesamoid bones (patella). Macroscopic structure of long bones: diaphysis, epiphysis, metaphysis, epiphyseal growth plate, periosteum, endosteum, and medullary cavity. Microscopic bone architecture: compact bone (osteons/Haversian systems, Volkmann canals, osteocytes) vs. spongy/cancellous bone (trabeculae, red bone marrow). Osteogenesis and bone remodeling: intramembranous ossification vs. endochondral ossification. Fracture healing stages and common radiographic bone landmarks."}, {"Title": "Lecture 3: Axial Skeleton: Skull, Cranial Bones, Facial Bones & Vertebral Column", "Subject": "Human Anatomy for Technologists", "Content": "The axial skeleton components. The skull architecture: neurocranium (8 bones: frontal, 2 parietal, 2 temporal, occipital, sphenoid, ethmoid) and viscerocranium/facial skeleton (14 bones: 2 maxillae, 2 zygomatic, 2 nasal, 2 lacrimal, 2 palatine, 2 inferior nasal conchae, vomer, mandible). Cranial sutures (coronal, sagittal, lambdoid, squamosal) and fontanelles in neonates. Cranial fossae (anterior, middle, posterior) and key foramina (foramen magnum, jugular foramen, carotid canal, optic canal). Vertebral column structure: 33 vertebrae (7 cervical, 12 thoracic, 5 lumbar, 5 fused sacral, 4 fused coccygeal). Normal spinal curvatures: primary (thoracic, sacral) vs. secondary (cervical, lumbar). Typical vs. atypical vertebrae (atlas C1, axis C2 with dens/odontoid process, vertebra prominens C7). Intervertebral discs (anulus fibrosus and nucleus pulposus) and spinal pathology (scoliosis, kyphosis, lordosis, disc herniation)."}, {"Title": "Lecture 4: Thoracic Cage: Sternum, Ribs & Intercostal Spaces", "Subject": "Human Anatomy for Technologists", "Content": "Skeletal framework of the thorax: sternum, 12 pairs of ribs, costal cartilages, and 12 thoracic vertebrae. The sternum anatomy: manubrium, body (mesosternum), and xiphoid process; sternal angle of Louis (T4-T5 junction, reference for 2nd rib, tracheal bifurcation, and aortic arch). Rib classification: true ribs (vertebrosternal, pairs 1-7), false ribs (vertebrochondral, pairs 8-10), and floating ribs (vertebral, pairs 11-12). Typical rib anatomy: head (articular facets), neck, tubercle, angle, costal groove (housing neurovascular bundle: intercostal vein, artery, nerve - VAN order). Superior thoracic aperture (thoracic inlet) and inferior thoracic aperture (thoracic outlet). Intercostal muscles (external, internal, innermost). Thoracic cage movements in respiration (pump-handle and bucket-handle mechanisms)."}, {"Title": "Lecture 5: Appendicular Skeleton: Upper Limb Bones (Clavicle, Scapula, Humerus, Radius, Ulna, Hand)", "Subject": "Human Anatomy for Technologists", "Content": "Pectoral girdle bones: Clavicle (S-shaped, sternal end, acromial end, conoid tubercle) and Scapula (spine, acromion, coracoid process, glenoid cavity, supraspinous/infraspinous/subscapular fossae). Arm: Humerus (head, anatomical and surgical necks, greater and lesser tubercles, intertubercular sulcus, deltoid tuberosity, radial groove, trochlea, capitulum, olecranon fossa, medial/lateral epicondyles). Forearm: Radius (head, neck, radial tuberosity, styloid process) and Ulna (olecranon, coronoid process, trochlear notch, radial notch, styloid process). Interosseous membrane. Hand skeleton: 8 carpal bones (proximal row: scaphoid, lunate, triquetrum, pisiform; distal row: trapezium, trapezoid, capitate, hamate), 5 metacarpals (I-V), and 14 phalanges (proximal, middle, distal; thumb having only proximal and distal). Clinical radiology: Colles fracture, scaphoid fracture, surgical neck humerus fracture with axillary nerve risk."}, {"Title": "Lecture 6: Appendicular Skeleton: Lower Limb Bones (Pelvis, Femur, Tibia, Fibula, Foot)", "Subject": "Human Anatomy for Technologists", "Content": "Pelvic girdle structure: bony pelvis formed by two coxal/hip bones, sacrum, and coccyx. Hip bone (os coxae) fusion of three bones: ilium (iliac crest, ASIS, AIIS, PSIS, PIIS, greater sciatic notch), ischium (ischial body, ramus, ischial spine, ischial tuberosity), and pubis (superior/inferior rami, pubic crest, symphysis pubis). Acetabulum and obturator foramen. Pelvic brim, true (lesser) pelvis, and false (greater) pelvis. Male vs. female pelvic differences (subpubic angle, pelvic inlet shape). Thigh: Femur (head, fovea capitis, neck, greater and lesser trochanters, intertrochanteric line/crest, linea aspera, medial/lateral condyles and epicondyles). Patella (sesamoid bone, base, apex, articular facets). Leg: Tibia (weight-bearing: tibial plateaus, tibial tuberosity, anterior border/shin, medial malleolus) and Fibula (non-weight bearing: head, neck with common peroneal nerve, shaft, lateral malleolus). Foot: 7 tarsal bones (talus, calcaneus, navicular, cuboid, medial/intermediate/lateral cuneiforms), 5 metatarsals, and 14 phalanges. Arches of the foot (longitudinal and transverse)."}, {"Title": "Lecture 7: Arthrology: Classification of Joints, Synovial Joints & Movements", "Subject": "Human Anatomy for Technologists", "Content": "Definition and structural classification of joints: Fibrous joints (synarthroses: sutures of skull, syndesmoses like interosseous membrane, gomphoses in dental sockets), Cartilaginous joints (amphiarthroses: synchondroses/primary cartilaginous with hyaline cartilage such as epiphyseal plate, symphyses/secondary cartilaginous with fibrocartilage such as pubic symphysis and intervertebral discs), and Synovial joints (diarthroses: freely movable). Anatomy of a typical synovial joint: articular cartilage (hyaline), joint capsule (fibrous capsule and synovial membrane), synovial fluid, joint cavity, reinforcing ligaments, intra-articular discs/menisci, bursae, and tendon sheaths. Classification of synovial joints by movement and shape: plane/gliding, hinge (ginglymus, e.g., elbow, knee), pivot (trochoid, e.g., atlantoaxial, proximal radioulnar), condyloid/ellipsoid (e.g., radiocarpal), saddle (sellar, e.g., 1st carpometacarpal), and ball-and-socket (spheroid, e.g., glenohumeral, hip). Joint movements: flexion/extension, abduction/adduction, rotation, circumduction, pronation/supination, inversion/eversion."}, {"Title": "Lecture 8: Muscular System: Skeletal, Cardiac, Smooth Muscles & Major Muscle Groups", "Subject": "Human Anatomy for Technologists", "Content": "Muscle tissue characteristics: excitability, contractility, extensibility, and elasticity. Types of muscle tissue: skeletal (striated, multinucleated, voluntary), cardiac (striated, intercalated discs, involuntary), and smooth (non-striated, single nucleus, involuntary in visceral walls). Skeletal muscle organization: epimysium, perimysium (fascicles), endomysium, and myofibrils. Functional muscle roles: agonist/prime mover, antagonist, synergist, and fixator. Major muscle groups: Muscles of facial expression (orbicularis oculi, orbicularis oris, buccinator) and mastication (masseter, temporalis, pterygoids). Neck muscles (sternocleidomastoid, scalenes). Anterior chest and abdominal wall (pectoralis major, rectus abdominis, external/internal obliques, transversus abdominis, rectus sheath, inguinal canal). Respiratory muscles (diaphragm and phrenic nerve C3-C5, intercostal muscles). Upper limb muscles (deltoid, rotator cuff muscles: SITS, biceps brachii, triceps brachii). Lower limb muscles (gluteus maximus/medius, quadriceps femoris: rectus femoris, vastus lateralis/medialis/intermedius, hamstrings: biceps femoris, semitendinosus, semimembranosus, gastrocnemius, soleus). Intramuscular injection sites (deltoid, dorsogluteal, ventrogluteal, vastus lateralis)."}, {"Title": "Lecture 9: Cardiovascular System: Heart Chambers, Valves, Great Vessels & Circulation", "Subject": "Human Anatomy for Technologists", "Content": "Anatomy of the heart: mediastinal position, base, apex, and pericardial sac (fibrous and serous pericardium, pericardial cavity). Heart wall layers: epicardium, myocardium, and endocardium. Cardiac chambers: right atrium (pectinate muscles, crista terminalis, fossa ovalis, opening of SVC, IVC, coronary sinus), right ventricle (tricuspid valve, chordae tendineae, papillary muscles, trabeculae carneae, pulmonary semilunar valve, pulmonary trunk), left atrium (openings of 4 pulmonary veins, auricle), left ventricle (thick myocardium, bicuspid/mitral valve, aortic semilunar valve, ascending aorta). Cardiac conduction system: SA node (pacemaker), AV node, AV bundle of His, right and left bundle branches, and Purkinje fibers. Coronary circulation: left coronary artery (LAD/anterior interventricular and circumflex branches) and right coronary artery (marginal and posterior interventricular branches), coronary sinus drainage. Systemic circulation vs. pulmonary circulation. Great vessels: aorta (ascending, arch, descending thoracic, abdominal), brachiocephalic trunk, left common carotid, left subclavian, SVC, IVC, pulmonary arteries, and pulmonary veins."}, {"Title": "Lecture 10: Respiratory System: Upper & Lower Respiratory Tract, Lungs & Pleura", "Subject": "Human Anatomy for Technologists", "Content": "Division into upper and lower respiratory tracts. Upper tract: external nose, nasal cavity (nasal septum, superior/middle/inferior conchae and meatuses), paranasal sinuses (frontal, maxillary, ethmoidal, sphenoidal), and pharynx (nasopharynx with pharyngeal tonsil and Eustachian tube opening, oropharynx with palatine and lingual tonsils, laryngopharynx). Lower tract: Larynx (thyroid, cricoid, and epiglottic cartilages; paired arytenoid, corniculate, cuneiform cartilages; vocal cords and rima glottidis). Trachea: 16-20 C-shaped hyaline cartilage rings, trachealis muscle, carina (bifurcation at T4-T5 level). Bronchial tree: right primary bronchus (shorter, wider, more vertical - clinical risk for foreign body aspiration) vs. left primary bronchus; lobar (secondary) bronchi (3 right, 2 left), segmental (tertiary) bronchi, bronchioles, terminal and respiratory bronchioles, alveolar ducts, and alveoli. Lungs: apex, base (diaphragmatic surface), costal and mediastinal surfaces, hilum, lobes (right: superior, middle, inferior with horizontal and oblique fissures; left: superior, inferior with oblique fissure, cardiac notch, and lingula). Pleura: parietal pleura, visceral pleura, pleural cavity, and costodiaphragmatic recess."}, {"Title": "Lecture 11: Digestive & Urinary Systems: GI Tract Organs, Liver, Kidneys & Ureters", "Subject": "Human Anatomy for Technologists", "Content": "Alimentary canal anatomy: oral cavity, pharynx, esophagus (cervical, thoracic, abdominal parts; esophageal hiatus at T10). Stomach: cardia, fundus, body, pyloric antrum, pyloric canal, pylorus, lesser and greater curvatures, rugae. Small intestine: duodenum (C-shaped, 4 parts, major duodenal papilla receiving bile and pancreatic ducts), jejunum, and ileum (Peyer patches, ileocecal valve). Large intestine: cecum, vermiform appendix (McBurney point), ascending colon, hepatic flexure, transverse colon, splenic flexure, descending colon, sigmoid colon, rectum, and anal canal; teniae coli, haustra, epiploic appendages. Accessory digestive organs: liver (right, left, caudate, quadrate lobes; porta hepatis; falciform ligament), gallbladder (fundus, body, neck, cystic duct, common bile duct), and pancreas (head in duodenal C-loop, neck, body, tail reaching splenic hilum; main pancreatic duct of Wirsung). Urinary system anatomy: Kidneys (retroperitoneal, T12-L3 position; renal capsule, cortex, renal columns of Bertin, renal medulla with 8-18 renal pyramids, renal papillae, minor and major calyces, renal pelvis). Ureters (3 anatomical constrictions: ureteropelvic junction, pelvic brim crossing iliac vessels, ureterovesical junction). Urinary bladder (trigone, detrusor muscle, internal urethral sphincter) and urethra (female short; male prostatic, membranous, spongy)."}, {"Title": "Lecture 12: Nervous System Overview: CNS, PNS, Brain Lobes, Spinal Cord & Final Review", "Subject": "Human Anatomy for Technologists", "Content": "Structural organization of the nervous system: Central Nervous System (CNS: brain and spinal cord) and Peripheral Nervous System (PNS: cranial nerves and spinal nerves). Functional divisions: Somatic and Autonomic Nervous Systems (Sympathetic and Parasympathetic). Brain subdivisions: Cerebrum (cerebral cortex, basal ganglia; frontal lobe - motor and Broca area, parietal lobe - somatosensory, temporal lobe - auditory and Wernicke area, occipital lobe - visual; longitudinal fissure, central sulcus, lateral sulcus, corpus callosum). Diencephalon (thalamus, hypothalamus, epithalamus/pineal gland). Brainstem: Midbrain (cerebral peduncles, colliculi), Pons, and Medulla Oblongata (pyramids, decussation, vital cardiovascular/respiratory centers). Cerebellum (two hemispheres, vermis, arbor vitae; motor coordination and balance). Ventricular system: lateral ventricles, third ventricle, cerebral aqueduct of Sylvius, fourth ventricle, choroid plexus, CSF circulation and arachnoid villi. Meninges: dura mater (falx cerebri, tentorium cerebelli), arachnoid mater, pia mater, and subarachnoid space. Spinal cord: conus medullaris (ends at L1-L2 in adults), cauda equina, filum terminale; gray matter horns (anterior/motor, posterior/sensory) and white matter columns; lumbar puncture landmark (L3-L4 / L4-L5 interspace). Cranial nerves (CN I to XII names, sensory/motor/mixed, basic functions). Comprehensive course review and radiological anatomical landmarks synthesis."}, {"Title": "Lecture 1: Word Roots, Prefixes, Suffixes & Combining Forms in Medical Language", "Subject": "Medical Terminology", "Content": "Basic components of medical terms: word roots (core meaning), prefixes (modifies meaning at the beginning), suffixes (modifies meaning at the end), and combining vowels (usually 'o', sometimes 'i'). Rules for combining forms: root + combining vowel = combining form (e.g., cardi/o). Rules for using combining vowels: keep vowel when suffix begins with a consonant (cardi/o + -pathy = cardiopathy); drop vowel when suffix begins with a vowel (cardi/o + -itis = carditis); keep vowel between two word roots regardless of vowel/consonant (gastr/o + enter/o + -logy = gastroenterology). Decoding medical words by analyzing suffix first, then prefix (if present), then word root. Literal translation vs. clinical definition. Etymological origins from Greek and Latin."}, {"Title": "Lecture 2: Suffixes for Surgical Procedures, Diagnostic Tests & Pathological Conditions", "Subject": "Medical Terminology", "Content": "Surgical operative suffixes: -ectomy (surgical excision/removal, e.g., appendectomy, cholecystectomy), -tomy (incision/cutting into, e.g., laparotomy, tracheotomy), -stomy (creation of an artificial opening/stoma, e.g., colostomy, tracheostomy), -plasty (surgical repair or reconstruction, e.g., rhinoplasty, angioplasty), -pexy (surgical fixation, e.g., nephropexy, orchiopexy), -rrhaphy (suturing/repairing, e.g., herniorrhaphy), -centesis (surgical puncture to aspirate fluid, e.g., thoracentesis, amniocentesis), -clasis (surgical breaking/crushing), -tripsy (crushing, e.g., lithotripsy). Diagnostic suffixes: -gram (written record/image, e.g., angiogram, electrocardiogram), -graph (instrument for recording, e.g., electrocardiograph), -graphy (process of recording, e.g., radiography, mammography), -meter (instrument to measure), -metry (process of measuring), -scope (instrument for visual examination, e.g., endoscope, bronchoscope), -scopy (process of visual examination, e.g., colonoscopy). Pathological/symptomatic suffixes: -itis (inflammation), -osis (abnormal condition/increase), -pathy (disease), -megaly (enlargement), -oma (tumor/mass), -malacia (softening), -sclerosis (hardening), -stenosis (narrowing/stricture), -algia/-dynia (pain), -penia (deficiency/decrease), -rrhea (flow/discharge), -rrhagia (excessive bleeding/bursting forth)."}, {"Title": "Lecture 3: Prefixes of Number, Measurement, Position, Direction & Negation", "Subject": "Medical Terminology", "Content": "Numerical and quantity prefixes: uni-/mono- (one), bi-/di- (two, double), tri- (three), quadri-/tetra- (four), multi-/poly- (many/excessive, e.g., polyuria), hemi-/semi- (half, e.g., hemiplegia), oligo- (scanty/few, e.g., oliguria), nulli- (none), primi- (first), pan- (all, e.g., pandemic). Measurement and size prefixes: macro- (large), micro- (small), hyper- (excessive/above normal, e.g., hypertension, hyperglycemia), hypo- (deficient/below normal, e.g., hypotension, hyperglycemia), iso- (equal), eu- (normal/good, e.g., eupnea). Positional and directional prefixes: ante-/pre-/pro- (before/in front of), post- (after/behind, e.g., postoperative), intra-/endo- (within/inside, e.g., intracellular, endoscopy), extra-/exo-/ecto- (outside), inter- (between, e.g., intercellular), sub-/infra- (under/below, e.g., sublingual), supra-/super- (above/excess), peri- (around/surrounding, e.g., pericardium), circum- (around), retro- (behind/backward, e.g., retroperitoneal), trans-/dia- (across/through, e.g., transdermal, diameter), ad- (toward), ab- (away from, e.g., abduction), epi- (upon/above, e.g., epidermis). Negation and opposition prefixes: a-/an- (without/absence of, e.g., anemia, apnea), anti-/contra- (against, e.g., antibiotic, contraindication), dys- (painful, difficult, abnormal, e.g., dyspnea, dysphagia), de- (down, lack of)."}, {"Title": "Lecture 4: Anatomical & Directional Terminology, Body Regions & Planes", "Subject": "Medical Terminology", "Content": "Positional terminology combining forms: cephal/o (head), cervic/o (neck), thorac/o (chest), abdomin/o (abdomen), lumb/o (lower back/loins), pelv/i or pelv/o (pelvis), inguin/o (groin), crani/o (cranium), dors/o (back), ventr/o (belly/front), proxim/o (near point of origin), dist/o (far from origin), medi/o (middle), later/o (side), anter/o (front), poster/o (back), super/o (upper), infer/o (lower). Body planes: sagittal, frontal/coronal, transverse/axial. Body positions: supine (lying face up), prone (lying face down), Fowler position (semi-upright sitting 45-60 degrees), Trendelenburg position (head lower than feet), lithotomy (gynecological position), lateral decubitus (lying on side). Nine abdominopelvic regions: right and left hypochondriac, epigastric, right and left lumbar/flank, umbilical, right and left iliac/inguinal, hypogastric/suprapubic. Four quadrants: RUQ, LUQ, RLQ, LLQ and key underlying viscera."}, {"Title": "Lecture 5: Musculoskeletal System Medical Terminology (Osteo-, Myo-, Arthro-)", "Subject": "Medical Terminology", "Content": "Word roots and combining forms for bones, joints, and muscles: oste/o (bone), myel/o (bone marrow or spinal cord), arthr/o and articul/o (joint), chondr/o (cartilage), ten/o, tend/o, and tendin/o (tendon), ligament/o (ligament), burs/o (bursa), synovi/o (synovium), my/o, muscul/o, and myos/o (muscle), rhabdomy/o (skeletal/striated muscle), leiomy/o (smooth muscle), fasci/o (fascia), spondyl/o (vertebra), cost/o (rib), crani/o (skull). Pathological terms: osteoarthritis (OA), rheumatoid arthritis (RA), osteoporosis, osteomalacia, osteomyelitis, bursitis, tendinitis, myasthenia gravis, rhabdomyolysis, scoliosis, lordosis, kyphosis, ankylosing spondylitis. Surgical terms: arthroplasty (total knee/hip replacement), arthroscopy, osteotomy, tenorrhaphy, bursectomy, craniotomy. Clinical signs and symptoms: arthralgia, myalgia, tetany, ataxia, muscle spasm, contracture, sprain vs. strain."}, {"Title": "Lecture 6: Cardiovascular & Hematologic Medical Terminology (Cardio-, Angio-, Hemo-)", "Subject": "Medical Terminology", "Content": "Combining forms for cardiovascular and blood systems: cardi/o and coron/o (heart), angi/o and vas/o and vascul/o (blood vessel), arteri/o (artery), arteriol/o (arteriole), ven/o and phleb/o (vein), venul/o (venule), ather/o (fatty plaque), hem/o and hemat/o (blood), erythr/o (red), leuk/o (white), thromb/o (clot), splen/o (spleen), lymph/o (lymph/lymphatic system). Cardiovascular pathologies: myocardial infarction (MI), atherosclerosis, arteriosclerosis, angina pectoris, cardiomyopathy, endocarditis, pericarditis, myocarditis, cardiac arrhythmia (tachycardia, bradycardia, ventricular fibrillation), hypertension, aneurysm, phlebitis, deep vein thrombosis (DVT), varicosities. Hematologic pathologies: anemia, leukemia, leukocytosis, leukopenia, thrombocytopenia, hemophilia, septicemia. Diagnostic and surgical terms: echocardiography (ECHO), angiography, cardiac catheterization, angioplasty, percutaneous transluminal coronary angioplasty (PTCA), coronary artery bypass grafting (CABG), endarterectomy, pericardiocentesis."}, {"Title": "Lecture 7: Respiratory System Medical Terminology (Pulmono-, Pneumo-, Broncho-)", "Subject": "Medical Terminology", "Content": "Combining forms for respiratory system: nas/o and rhin/o (nose), sinus/o (sinus), pharyng/o (pharynx), laryng/o (larynx), trache/o (trachea), bronch/o and bronchi/o (bronchus), bronchiol/o (bronchiole), alveol/o (alveolus), pneum/o and pneumon/o and pulmon/o (lung / air), pleur/o (pleura), phren/o (diaphragm), ox/i and ox/o (oxygen), capn/o (carbon dioxide), spir/o (breathing). Suffixes: -pnea (breathing: apnea, dyspnea, tachypnea, bradypnea, orthopnea, hyperpnea), -thorax (chest condition: pneumothorax, hemothorax, pyothorax). Pathologies: pneumonia, bronchitis, bronchiectasis, asthma, chronic obstructive pulmonary disease (COPD), emphysema, atelectasis, pulmonary embolism (PE), pulmonary edema, pleurisy/pleuritis, pleural effusion. Diagnostic and operative terms: bronchoscopy, spirometry, thoracentesis, endotracheal intubation, tracheostomy, lobectomy, pneumonectomy. Symptoms: hemoptysis, cyanosis, hypoxia, hypoxemia, hypercapnia, stridor, wheezing."}, {"Title": "Lecture 8: Digestive System Medical Terminology (Gastro-, Hepato-, Entero-)", "Subject": "Medical Terminology", "Content": "Combining forms: stomat/o and or/o (mouth), cheil/o (lip), gloss/o and lingu/o (tongue), gingiv/o (gum), esophag/o (esophagus), gastr/o (stomach), enter/o (small intestine), duoden/o (duodenum), jejun/o (jejunum), ile/o (ileum), col/o and colon/o (colon), sigmoid/o (sigmoid colon), rect/o and proct/o (rectum / anus), hepat/o (liver), cholecyst/o (gallbladder), chol/e (bile/gall), choledoch/o (common bile duct), pancreat/o (pancreas), lapar/o and celi/o (abdomen). Pathological conditions: gastritis, gastroenteritis, peptic ulcer disease (PUD), gastroesophageal reflux disease (GERD), appendicitis, diverticulosis, diverticulitis, Crohn disease, ulcerative colitis, cirrhosis, hepatitis, cholelithiasis, cholecystitis, choledocholithiasis, pancreatitis, ascites. Diagnostic and surgical terms: esophagogastroduodenoscopy (EGD), colonoscopy, laparoscopy, cholecystectomy, gastrectomy, colostomy, ileostomy, anastomosis, endoscopic retrograde cholangiopancreatography (ERCP). Signs and symptoms: dysphagia, dyspepsia, hematemesis, melena, hematochezia, nausea, emesis, jaundice/icterus, cachexia."}, {"Title": "Lecture 9: Nervous System & Special Senses Terminology (Neuro-, Encephalo-, Ophthalmo-)", "Subject": "Medical Terminology", "Content": "Nervous system combining forms: neur/o (nerve), encephal/o (brain), cerebr/o (cerebrum), cerebell/o (cerebellum), myel/o (spinal cord/bone marrow), mening/i and mening/o (meninges), gli/o (glue / glial cells), gangli/o (ganglion). Special senses combining forms: ophthalm/o, ocul/o, and opt/o (eye), kerat/o (cornea), retin/o (retina), blephar/o (eyelid), ot/o and aur/i (ear), myring/o and tympan/o (tympanic membrane), cochle/o (cochlea). Pathologies: meningitis, encephalitis, neuropathy, neuralgia, epilepsy, Alzheimer disease, Parkinson disease, multiple sclerosis (MS), cerebrovascular accident (CVA/stroke), transient ischemic attack (TIA), hydrocephalus, glioblastoma, cataract, glaucoma, conjunctivitis, macular degeneration, otitis media, tinnitus, vertigo. Suffixes and clinical terms: -paresis (slight paralysis/weakness, e.g., hemiparesis), -plegia (paralysis, e.g., paraplegia, quadriplegia), aphasia, dysphasia, anesthesia, hyperesthesia, analgesia. Diagnostic and surgical procedures: lumbar puncture (LP), electroencephalography (EEG), craniotomy, neuroplasty, myringotomy, keratoplasty."}, {"Title": "Lecture 10: Urinary & Reproductive Systems Medical Terminology (Nephro-, Uro-, Cysto-)", "Subject": "Medical Terminology", "Content": "Urinary system combining forms: nephr/o and ren/o (kidney), glomerul/o (glomerulus), pyel/o (renal pelvis), ureter/o (ureter), cyst/o and vesic/o (urinary bladder), urethr/o (urethra), ur/o and urin/o (urine/urinary system). Male reproductive: orchid/o, orchi/o, and testicul/o (testis), prostat/o (prostate gland), vas/o (vas deferens / vessel), balan/o (glans penis). Female reproductive: hyster/o, metr/o, and uter/o (uterus), oophor/o and ovari/o (ovary), salping/o (fallopian tube), colp/o and vagin/o (vagina), mamm/o and mast/o (breast), colp/o (vagina), cervic/o (cervix). Urinary pathologies: nephritis, glomerulonephritis, nephrolithiasis, renal calculus, hydronephrosis, cystitis, urethritis, acute kidney injury (AKI), chronic kidney disease (CKD), uremia, polyuria, oliguria, anuria, dysuria, hematuria, proteinuria, nocturnal enuresis. Reproductive pathologies: benign prostatic hyperplasia (BPH), prostatitis, cryptorchidism, endometriosis, salpingitis, pelvic inflammatory disease (PID), ectopic pregnancy. Surgical procedures: nephrectomy, lithotripsy, cystoscopy, hemodialysis, TURP (transurethral resection of prostate), hysterectomy, oophorectomy, salpingectomy, mastectomy."}, {"Title": "Lecture 11: Radiology, Diagnostic Imaging & Clinical Abbreviations (CT, MRI, US, Rx, Dx)", "Subject": "Medical Terminology", "Content": "Radiological and diagnostic imaging terminology: radi/o (radiation, x-rays), son/o and ech/o (sound), fluor/o (luminous / fluorescent), tom/o (to cut / section / slice), scint/i (spark / scintillation). Radiopacity vs. radiolucency; hyperechoic, hypoechoic, anechoic in ultrasonography; hyperdense, hypodense, isodense in computed tomography; hyperintense, hypointense in MRI. Standard imaging modalities and acronyms: X-ray (radiography), CT (computed tomography), MRI (magnetic resonance imaging), US (ultrasound), PET (positron emission tomography), SPECT (single-photon emission computed tomography), DEXA (dual-energy x-ray absorptiometry). Clinical diagnostic abbreviations: Dx (diagnosis), Hx (history), Rx (prescription), Sx (symptoms), Tx (treatment), c/o (complaining of), SOB (shortness of breath), WNL (within normal limits), NPO (nil per os / nothing by mouth), PRN (pro re nata / as needed), STAT (immediately), ICU (intensive care unit), ER/ED (emergency room/department), ECG/EKG (electrocardiogram), BP (blood pressure), HR (heart rate), RR (respiratory rate), SpO2 (oxygen saturation)."}, {"Title": "Lecture 12: Comprehensive Medical Terminology Case Studies & Final Exam Review", "Subject": "Medical Terminology", "Content": "Integrated clinical case scenarios demonstrating terminology across multiple systems: cardiovascular emergency with acute myocardial infarction (AMI) undergoing PTCA; respiratory insufficiency in acute asthma exacerbation requiring bronchodilator Tx and arterial blood gas (ABG) analysis; acute appendicitis requiring emergency laparoscopic appendectomy; polytrauma case involving closed reduction and internal fixation (CRIF) of femoral fracture and head CT ruling out intracranial hematoma. Systematic breakdown and analysis of multi-morpheme complex terms. Review of commonly confused prefix/suffix pairs (inter- vs. intra-, dys- vs. eu-, -ectomy vs. -stomy vs. -tomy, -rrhagia vs. -rrhea vs. -rrhexis vs. -rrhaphy). Standard medical abbreviations and acronyms review. Preparation for final summative medical terminology examination."}, {"Title": "Lecture 1: Introduction to Information Technology, Computer Systems & Healthcare IT", "Subject": "Information Technology (IT)", "Content": "Definition of Information Technology (IT) and Information Systems (IS). Evolution of computer generations from vacuum tubes to microprocessors and AI. System components: Hardware, Software, Data, People, and Procedures. Data vs. Information vs. Knowledge (DIKW hierarchy). Role of IT in modern healthcare: electronic health records (EHR), automated laboratory equipment, medical imaging networks, telemedicine, and clinical decision support systems (CDSS). Computer classifications: supercomputers, mainframes, servers, workstations, personal computers (laptops, desktops), and embedded medical microcontrollers."}, {"Title": "Lecture 2: Computer Hardware Architecture: CPU, Memory (RAM/ROM), Storage & I/O Devices", "Subject": "Information Technology (IT)", "Content": "Von Neumann computer architecture model. Central Processing Unit (CPU) architecture: Arithmetic Logic Unit (ALU), Control Unit (CU), and internal registers. Instruction cycle (Fetch-Decode-Execute). CPU clock speed (GHz), cache memory (L1, L2, L3), multi-core processors. Primary storage: Random Access Memory (RAM: dynamic RAM, static RAM, volatility) and Read-Only Memory (ROM: PROM, EPROM, EEPROM, BIOS/UEFI boot process). Secondary storage media: Hard Disk Drives (HDD: magnetic platters, read/write heads), Solid-State Drives (SSD: NAND flash memory, high IOPS), optical media, and external drives. Input devices (keyboards, barcode scanners, touchscreen interfaces, medical digitizers) and output devices (high-resolution diagnostic monitors, clinical printers). Bus architecture: data bus, address bus, control bus."}, {"Title": "Lecture 3: Operating Systems, File Management & System Software Fundamentals", "Subject": "Information Technology (IT)", "Content": "System software vs. application software. Role and core functions of an Operating System (OS): process management (multitasking, scheduling, multithreading), memory management (paging, virtual memory), storage and file system management, device driver coordination, and user interface (CLI vs. GUI). Common operating systems: Microsoft Windows, Linux distributions, macOS, Android, and specialized real-time operating systems (RTOS) in medical devices. File systems: NTFS, FAT32, exFAT, ext4; file paths, extensions (.docx, .xlsx, .pdf, .dcm), attributes, hierarchical directory tree. System utilities: disk defragmentation, disk cleanup, backup and recovery tools, and antivirus software."}, {"Title": "Lecture 4: Number Systems (Binary, Decimal, Octal, Hexadecimal) & Data Representation", "Subject": "Information Technology (IT)", "Content": "Fundamentals of positional number systems: Decimal (base 10), Binary (base 2), Octal (base 8), and Hexadecimal (base 16). Conversion techniques between decimal, binary, octal, and hexadecimal. Binary arithmetic: addition, subtraction using two's complement. Character representation codes: ASCII (7-bit, 8-bit extended) and Unicode (UTF-8, UTF-16) for multilingual computing. Digital data units: bit, nibble, byte (8 bits), Kilobyte (KB), Megabyte (MB), Gigabyte (GB), Terabyte (TB), Petabyte (PB). Representation of digital images: pixels, bit depth (8-bit grayscale = 256 shades, 12-bit/16-bit in radiological CT/MRI), image matrix dimensions, and resolution."}, {"Title": "Lecture 5: Computer Networks, LAN/WAN, Internet Protocols (TCP/IP) & Cloud Computing", "Subject": "Information Technology (IT)", "Content": "Network fundamentals: definition, benefits, and network classifications by geographic scope (PAN, LAN, MAN, WAN, WLAN). Network topologies: star, bus, ring, mesh, and hybrid. Network hardware: Network Interface Cards (NIC), switches, routers, gateways, wireless access points (WAP), and transmission media (twisted pair UTP/STP Cat6, fiber optic cables, wireless RF). OSI 7-layer reference model vs. TCP/IP 4-layer model. Core internet protocols: IP (IPv4 vs. IPv6 addressing, subnetting), TCP (reliable connection-oriented), UDP (connectionless), HTTP/HTTPS, DNS, DHCP, FTP. Cloud computing models: Service models (IaaS, PaaS, SaaS) and Deployment models (Private, Public, Hybrid, Community). Healthcare cloud storage benefits, scalability, and disaster recovery."}, {"Title": "Lecture 6: Microsoft Word & Academic Research Formatting Standards", "Subject": "Information Technology (IT)", "Content": "Word processing essentials for academic and clinical research documentation: ribbon interface, document layouts, margins, orientation, and section breaks. Typography: font hierarchy, line and paragraph spacing, indents, and bulleted/numbered lists. Styles and automated Table of Contents (TOC) generation. Header, footer, and page numbering with Roman and Arabic numerals. Tables: insertion, formatting, alignment, formulas, and auto-fit. Referencing and citations: inserting footnotes, endnotes, citations, and managing bibliographies in APA and Vancouver formats. Review and collaboration tools: Track Changes, comments, compare documents, spell check, and document protection/exporting to PDF."}, {"Title": "Lecture 7: Microsoft Excel Fundamentals: Spreadsheets, Formulas, Functions & Data Formatting", "Subject": "Information Technology (IT)", "Content": "Spreadsheet architecture: workbooks, worksheets, cells, rows, columns, and cell referencing (relative A1, absolute $A$1, mixed $A1 / A$1). Data types in Excel: text, numbers, dates, currency, percentages, booleans. Data formatting: cell borders, fill colors, number formats, date formatting, text wrap, and merge & center. Basic mathematical operators (+, -, *, /, ^) and order of operations (PEMDAS). Fundamental built-in functions: SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, COUNTBLANK, ROUND. Data entry best practices, autofill handle, flash fill, sorting ranges, and applying basic table filters. Error values in Excel: #DIV/0!, #N/A, #NAME?, #VALUE!, #REF!, and methods to troubleshoot them."}, {"Title": "Lecture 8: Advanced Microsoft Excel: Logical Functions (IF, AND, OR), Lookup & Charts", "Subject": "Information Technology (IT)", "Content": "Logical functions: IF syntax (=IF(condition, value_if_true, value_if_false)), nested IF statements, AND, OR, NOT, and IFS. Error handling with IFERROR. Statistical conditional functions: SUMIF, SUMIFS, COUNTIF, COUNTIFS, AVERAGEIF, AVERAGEIFS. Lookup and reference functions: VLOOKUP (syntax, lookup value, table array, col_index, range_lookup FALSE for exact match), HLOOKUP, modern XLOOKUP, and INDEX-MATCH combinations. Data visualization: creating and customizing charts (column charts, bar charts, line graphs, pie charts, scatter plots) for laboratory and clinical trends. Chart elements: axes, titles, data labels, legends, and trendlines. Conditional formatting: data bars, color scales, icon sets, and formula-based highlighting rules."}, {"Title": "Lecture 9: Database Management Systems (DBMS), Relational Tables & Healthcare Records (EHR)", "Subject": "Information Technology (IT)", "Content": "File-based systems vs. Database Management Systems (DBMS). Characteristics of relational databases (RDBMS): tables, records (tuples/rows), fields (attributes/columns). Keys in RDBMS: Primary Key (unique identifier, entity integrity), Foreign Key (referential integrity), and Candidate Keys. Table relationships: One-to-One (1:1), One-to-Many (1:N), and Many-to-Many (M:N with junction tables). Normalization concepts (1NF, 2NF, 3NF) to eliminate data redundancy and anomalies. Basic SQL concepts: SELECT, FROM, WHERE, INSERT, UPDATE, DELETE. Electronic Health Record (EHR) and Electronic Medical Record (EMR) systems: patient demographics, clinical notes, order entry (CPOE), and laboratory information systems (LIS)."}, {"Title": "Lecture 10: Information Security, Cybersecurity Threats, Privacy & Hospital Data Protection", "Subject": "Information Technology (IT)", "Content": "Principles of information security: CIA Triad (Confidentiality, Integrity, Availability). Cybersecurity threat landscape: malware types (viruses, worms, Trojan horses, ransomware, spyware, keyloggers), phishing and social engineering attacks, denial-of-service (DoS/DDoS), man-in-the-middle (MitM) attacks. Healthcare cybersecurity vulnerabilities: medical IoT devices, legacy hospital servers, unpatched software. Defensive countermeasures: firewalls, intrusion detection/prevention systems (IDS/IPS), multi-factor authentication (MFA), role-based access control (RBAC). Cryptography basics: symmetric vs. asymmetric encryption, public/private keys, hashing (SHA-256), SSL/TLS. Data backup strategies (3-2-1 backup rule). Regulatory standards: HIPAA compliance, GDPR, patient data anonymization, and audit logs."}, {"Title": "Lecture 11: Digital Health, PACS/RIS Systems & Artificial Intelligence in Medical Imaging", "Subject": "Information Technology (IT)", "Content": "Specialized healthcare information systems: Picture Archiving and Communication System (PACS) architecture: acquisition modalities, PACS server/archive, viewing workstations, and secure network distribution. Radiology Information System (RIS) and Hospital Information System (HIS) integration. Standards in medical imaging informatics: DICOM (Digital Imaging and Communications in Medicine) standard, metadata tags, image file formats; HL7 (Health Level Seven) standard for clinical text messages; FHIR (Fast Healthcare Interoperability Resources). Fundamentals of Artificial Intelligence (AI) in healthcare: Machine Learning (ML), Deep Learning (DL), Convolutional Neural Networks (CNN) for radiological image segmentation, lesion detection, computer-aided diagnosis (CAD), and predictive clinical analytics."}, {"Title": "Lecture 12: Practical IT & Excel Capstone Review for Final Exam", "Subject": "Information Technology (IT)", "Content": "Comprehensive hands-on synthesis of computing concepts and applications in health sciences technology. Number system conversion practice: binary to hex and decimal. Network IP configuration and troubleshooting commands (ping, ipconfig, tracert). Advanced Excel clinical dashboard capstone: building multi-sheet patient tracking models, utilizing XLOOKUP/VLOOKUP, nested IF/IFS, SUMIFS, dynamic charts, and conditional formatting. Review of DICOM network flows, PACS/RIS interoperability, data privacy protocols, and hospital cybersecurity drills. Preparation for computer laboratory practical exam and theoretical written final examination."}, {"Title": "Lecture 1: Academic English Foundations, Parts of Speech & Sentence Structure", "Subject": "English (1)", "Content": "Overview of academic and scientific English. The eight parts of speech: nouns (countable/uncountable, abstract/concrete), pronouns (personal, relative, demonstrative), verbs (action, linking, auxiliary), adjectives, adverbs (frequency, manner, degree), prepositions, conjunctions (coordinating FANBOYS, subordinating), and interjections. English sentence structure: subject, verb, object, complement, adverbial (SV, SVO, SVC, SVOO, SVOC). Sentence types: simple, compound (using coordinators and semicolons), complex (independent + dependent clauses), and compound-complex. Identifying and correcting common sentence errors: run-on sentences, comma splices, and sentence fragments in medical reports."}, {"Title": "Lecture 2: Present Simple & Present Continuous in Scientific & Clinical Contexts", "Subject": "English (1)", "Content": "Present Simple tense: form, auxiliary verbs (do/does), spelling rules for third-person singular (-s, -es, -ies), negative and interrogative structures. Usage in medical English: universal scientific truths, biological facts, physiological processes (e.g., 'The heart pumps blood through the systemic circulation'), and hospital routine operations. Present Continuous tense: form (am/is/are + verb-ing), spelling rules for present participles, negative and interrogative structures. Usage: temporary actions, ongoing patient observations (e.g., 'The patient is responding well to antibiotic therapy'), changing states, and future arrangements. Stative vs. dynamic verbs (perception, cognition, emotion, possession verbs rarely used in continuous aspect). Time markers: always, usually, often, rarely, currently, at present, right now."}, {"Title": "Lecture 3: Past Simple & Past Continuous for Medical Case Histories", "Subject": "English (1)", "Content": "Past Simple tense: regular verbs (-ed endings and pronunciation: /t/, /d/, /Id/) and irregular verbs common in clinical documentation (e.g., fell, underwent, bled, felt, took). Auxiliary 'did' in questions and negatives. Clinical usage: recording completed medical events, past medical history (PMH), previous surgeries, and discrete onset of symptoms. Past Continuous tense: form (was/were + verb-ing), negative and question forms. Clinical usage: background actions in progress when interrupted by another event (e.g., 'The patient was walking down stairs when she experienced sudden chest pain'). Combining Past Continuous and Past Simple using 'when', 'while', and 'as'. Time expressions: yesterday, last week, two days ago, in 2023, during admission."}, {"Title": "Lecture 4: Future Forms & Modal Verbs (Can, Must, Should, May) in Healthcare Instructions", "Subject": "English (1)", "Content": "Expressing future time in English: 'will' + base verb (instant decisions, predictions based on opinion), 'be going to' + base verb (prior intentions, predictions based on present physical evidence), Present Continuous for scheduled arrangements, and Present Simple for fixed hospital schedules/timetables. Modal auxiliary verbs in medical context: Ability and possibility (can, could, may, might; e.g., 'Ultrasound can detect gallstones without radiation'); Obligation and necessity (must, have to, need to; e.g., 'The technician must wear lead apron during fluoroscopy'); Prohibition (must not / mustn't); Recommendation and clinical advice (should, ought to, had better; e.g., 'Patients with renal impairment should drink adequate fluids'); Permission and requests (may, could, would). Modals of deduction: must be, can't be, might be."}, {"Title": "Lecture 5: Passive Voice in Scientific Reports & Laboratory Procedures", "Subject": "English (1)", "Content": "Form and mechanics of the Passive Voice: Subject + appropriate form of 'to be' + Past Participle (V3) (+ by agent, optional). Tenses in passive voice: Present Simple passive (am/is/are + V3), Past Simple passive (was/were + V3), Present Perfect passive (has/have been + V3), and Modal passives (modal + be + V3). Rationale for using passive voice in scientific English: objectivity, impersonality, focus on the procedure, result, or phenomenon rather than the performer (e.g., 'Blood samples were centrifuged at 3000 rpm for 10 minutes' vs. 'We centrifuged the blood samples'). Converting active clinical instructions into passive scientific reports. Avoiding over-use and maintaining clarity in laboratory documentation."}, {"Title": "Lecture 6: Reading Comprehension Strategies for Medical & Scientific Articles", "Subject": "English (1)", "Content": "Critical reading methodologies for biomedical literature. Skimming: rapid reading to grasp the main idea, gist, and overall structure of scientific papers (reading title, abstract, section headings, conclusion). Scanning: rapid visual search for specific data, numerical values, keywords, names, or drug dosages. Reading for detail and in-depth comprehension. Contextual guessing: inferring meanings of unfamiliar clinical vocabulary from surrounding syntactic and semantic clues. Understanding text organization and rhetorical patterns: problem-solution, cause-effect, comparison-contrast, and chronological processes. Analyzing the standard IMRaD structure (Introduction, Methods, Results, and Discussion) in medical research publications."}, {"Title": "Lecture 7: Academic Vocabulary, Collocations & Technical Word Formation", "Subject": "English (1)", "Content": "High-frequency academic vocabulary derived from the Academic Word List (AWL) relevant to health sciences (analyze, assess, evaluate, indicate, significant, function, methodology, valid). Collocations in healthcare English: verb-noun collocations (administer medication, run tests, take vital signs, confirm diagnosis, perform surgery, discharge a patient), adjective-noun collocations (acute pain, chronic illness, vital organs, adverse reaction, sterile environment). Word formation processes: prefixation, suffixation, and conversion. Transforming word classes: noun to adjective (infection -> infectious, pathology -> pathological), verb to noun (transcribe -> transcription, examine -> examination). Avoiding ambiguity and jargon in interprofessional communication."}, {"Title": "Lecture 8: Paragraph Writing: Topic Sentences, Supporting Details & Coherence", "Subject": "English (1)", "Content": "Structure of a formal academic paragraph: Topic Sentence (controlling idea that states the main point clearly), Supporting Sentences (concrete evidence, clinical examples, statistics, physiological explanations, case observations), and Concluding Sentence (summarizes main point or provides logical transition). Techniques for achieving paragraph unity (focusing on one single topic) and coherence. Transition words and cohesive devices: addition (furthermore, moreover, in addition), contrast (however, on the other hand, in contrast, whereas), cause and effect (therefore, consequently, as a result, due to), and sequence/chronology (firstly, subsequently, finally, meanwhile). Pronoun reference and lexical repetition for smooth flow."}, {"Title": "Lecture 9: Summarizing & Paraphrasing Scientific Texts Without Plagiarism", "Subject": "English (1)", "Content": "Academic integrity and definition of plagiarism in scientific writing. Paraphrasing techniques: restating an author's ideas in one's own words while preserving the original meaning. Effective steps for paraphrasing: change sentence structure (active to passive, clause to phrase), substitute keywords with appropriate scientific synonyms, alter grammatical forms, and reorganize idea order. Summarizing strategies: condensing a lengthy clinical text or research study into its essential core points (1/3 or 1/4 of original length), omitting minor details, anecdotes, and redundant examples. Incorporating reporting verbs: states, demonstrates, argues, suggests, reports, asserts, confirms. In-text attribution and ethical citation practices."}, {"Title": "Lecture 10: Medical Communication & Patient-Technologist Dialogue Skills", "Subject": "English (1)", "Content": "Principles of therapeutic and clinical communication in health sciences. Building rapport: welcoming patients, introducing professional role, and verifying patient identity (two identifiers: full name and date of birth). Explaining radiological and clinical procedures clearly in layman terms to alleviate patient anxiety (e.g., explaining CT scanner noise, breathing instructions during chest X-ray, contrast injection sensations). Active listening techniques: clarifying, reflecting, empathizing, and avoiding interrupting. Asking effective questions: open-ended questions for clinical history (e.g., 'Can you describe the pain you feel?'), closed-ended questions for contraindications (e.g., 'Do you have a cardiac pacemaker?'). Overcoming communication barriers: elderly patients, pediatric patients, non-native speakers, and anxious patients."}, {"Title": "Lecture 11: Presentation Skills & Visual Aid Descriptions in English", "Subject": "English (1)", "Content": "Delivering effective scientific and medical presentations in English. Structuring a presentation: Hook/Introduction (greeting, introducing topic, outline), Body (logical progression with signposting language: 'Moving on to...', 'Let us now consider...'), and Conclusion (recapitulating key takeaways, recommendations, inviting questions). Describing visual aids: charts, graphs, diagrams, and anatomical images. Vocabulary for trends: verbs and nouns of increase (rise, climb, peak, surge), decrease (drop, decline, plummet, dip), and stability (remain steady, plateau). Adverbs of degree and speed (drastically, slightly, steadily, sharply). Non-verbal presentation dynamics: eye contact, body language, voice modulation, pacing, and handling audience Q&A with poise."}, {"Title": "Lecture 12: Comprehensive Grammar, Reading & Writing Final Revision", "Subject": "English (1)", "Content": "Integrated revision covering all core language skills taught throughout the semester. Grammar diagnostic review: verb tenses (Present Simple/Continuous, Past Simple/Continuous, Future), passive voice transformation, and modal verb usage in hospital scenarios. Academic vocabulary consolidation: AWL terms and medical collocations review. Reading comprehension practice: analyzing a peer-reviewed biomedical research paper under exam conditions. Writing task mastery: evaluating student-generated clinical paragraphs for topic sentence clarity, cohesion, paraphrasing accuracy, and citation compliance. Dialogue role-play review: simulated patient encounters and safety instruction delivery. Preparation for the final written and oral English exams."}, {"Title": "Lecture 1: Introduction to Critical Thinking, Logic & Barriers to Rational Thought", "Subject": "Innovation & Critical Thinking", "Content": "Definition and historical development of critical thinking (Socrates, John Dewey, Bloom taxonomy). Characteristics of a critical thinker: open-mindedness, skepticism, intellectual humility, curiosity, and objectivity. Thinking fast and slow: Dual-process theory (System 1: intuitive, automatic, unconscious, error-prone vs. System 2: analytical, deliberative, conscious, logical). Internal and external barriers to rational thinking: egocentric thinking, sociocentric/conformist thinking, emotional reasoning, wishful thinking, prejudice, peer pressure, and authority bias in clinical hierarchies. Importance of critical reflection in applied healthcare and diagnostic reasoning."}, {"Title": "Lecture 2: Arguments, Premises, Conclusions & Deductive vs Inductive Reasoning", "Subject": "Innovation & Critical Thinking", "Content": "Structure of an argument: identifying propositions, premises (evidence/reasons), and conclusions (claims). Premise indicators (because, since, given that) and conclusion indicators (therefore, thus, consequently, so). Differentiating arguments from explanations, opinions, assertions, and descriptions. Types of reasoning: Deductive reasoning (general to specific; valid vs. invalid, sound vs. unsound; e.g., syllogisms: 'All mammals have hearts; humans are mammals; therefore humans have hearts'). Inductive reasoning (specific observations to general probability; strong vs. weak, cogent vs. uncogent; e.g., clinical trials, epidemiological generalizations). Abductive reasoning (inference to the best clinical explanation based on incomplete evidence)."}, {"Title": "Lecture 3: Cognitive Biases, Logical Fallacies & Evaluating Evidence in Healthcare", "Subject": "Innovation & Critical Thinking", "Content": "Common cognitive biases in clinical settings: Confirmation bias (seeking data that confirms pre-existing diagnoses), Anchoring bias (fixating on initial lab result/symptom), Availability heuristic (judging probability by easily recalled cases), Framing effect, and Overconfidence bias. Formal vs. informal logical fallacies: Ad Hominem (attacking person instead of argument), Straw Man (misrepresenting opponent claim), Post Hoc Ergo Propter Hoc (false cause / correlation vs causation), False Dilemma (black-and-white thinking), Slippery Slope, Appeal to Ignorance (argumentum ad ignorantiam), Appeal to Authority (ad verecundiam), and Bandwagon fallacy (ad populum). Evaluating evidence hierarchy: anecdotal reports vs. observational studies vs. randomized controlled trials (RCTs) vs. systematic reviews and meta-analyses."}, {"Title": "Lecture 4: Problem Identification, Root Cause Analysis & Analytical Frameworks", "Subject": "Innovation & Critical Thinking", "Content": "Problem definition: distinguishing symptoms from root causes in healthcare operations. Root Cause Analysis (RCA) methodologies: The 5 Whys technique (iterative interrogative technique to explore cause-and-effect relationships). Ishikawa Diagram (Fishbone / Cause-and-Effect Diagram: 6Ms - Manpower, Machine, Method, Material, Measurement, Milieu/Environment). Pareto Analysis (80/20 rule: identifying vital few causes versus trivial many). Failure Mode and Effects Analysis (FMEA): identifying potential failure points, calculating Risk Priority Number (RPN = Severity * Occurrence * Detection). SWOT Analysis (Strengths, Weaknesses, Opportunities, Threats) and PESTLE analysis for organizational healthcare challenges."}, {"Title": "Lecture 5: Creativity, Divergent vs Convergent Thinking & Brainstorming Techniques", "Subject": "Innovation & Critical Thinking", "Content": "The creative process and its neural basis. Divergent thinking (generating many diverse, novel ideas; fluency, flexibility, originality, elaboration) vs. Convergent thinking (evaluating, analyzing, filtering, and selecting the optimal solution). Brainstorming fundamentals: Alex Osborn rules (defer judgment, encourage wild ideas, go for quantity, build on ideas of others). Structured ideation techniques: SCAMPER tool (Substitute, Combine, Adapt, Modify/Magnify, Put to other use, Eliminate, Reverse/Rearrange). Mind mapping and visual thinking for complex healthcare concepts. Edward de Bono Six Thinking Hats method (White: facts, Red: emotions, Black: caution/risks, Yellow: optimism/benefits, Green: creativity, Blue: process control). Overcoming creative blocks and functional fixedness."}, {"Title": "Lecture 6: Design Thinking Process: Empathize, Define, Ideate, Prototype & Test", "Subject": "Innovation & Critical Thinking", "Content": "The Human-Centered Design (HCD) philosophy and Stanford d.school Design Thinking framework. Stage 1 - Empathize: understanding user/patient/clinician needs through observational research, shadowing, immersive experiences, and user interviews; constructing empathy maps and patient personas. Stage 2 - Define: synthesizing observations into actionable problem statements using Point-of-View (POV) formulas and 'How Might We' (HMW) questions. Stage 3 - Ideate: collaborative solution generation. Stage 4 - Prototype: creating low-fidelity prototypes (paper sketches, cardboard models, digital wireframes) to make ideas tangible quickly and cheaply. Stage 5 - Test: gathering user feedback, conducting usability testing, validating assumptions, and iterating based on real-world constraints."}, {"Title": "Lecture 7: Innovation in Medical Technology & Applied Health Sciences", "Subject": "Innovation & Critical Thinking", "Content": "Definition and types of innovation: Incremental (continuous improvements to existing technologies), Radical/Breakthrough (major technological advances), and Disruptive innovation (accessible, affordable alternatives transforming entire markets). Historical game-changing medical innovations: discovery of X-rays (Wilhelm Roentgen), antibiotics, vaccines, MRI, CT scanning, laparoscopic surgery, and CRISPR gene editing. Current frontiers of healthcare innovation: Point-of-Care Testing (POCT), wearable biometric monitors, 3D printing of patient-specific anatomical models and implants, surgical robotics (da Vinci system), nanomedicine, telemedicine platforms, and artificial intelligence in medical diagnostics. Role of applied health technologists as frontline innovators."}, {"Title": "Lecture 8: Decision-Making Models Under Uncertainty & Risk Assessment", "Subject": "Innovation & Critical Thinking", "Content": "Nature of decision-making in clinical and technical environments. Rational decision-making model: define problem, identify criteria, allocate weights, develop alternatives, evaluate alternatives, select optimal decision. Intuitive vs. evidence-based decision-making. Decision analysis tools: Decision Trees (nodes, branches, probabilities, expected monetary values / payoffs). Multi-Criteria Decision Analysis (MCDA). Risk assessment and management: hazard identification, risk estimation (Probability x Impact matrix), risk mitigation strategies (avoidance, reduction, transference, acceptance). Ethical risk evaluation in medical triage and emergency situations. Preventing cognitive burnout and fatigue-induced diagnostic errors."}, {"Title": "Lecture 9: Collaborative Problem Solving, Team Dynamics & Effective Questioning", "Subject": "Innovation & Critical Thinking", "Content": "Team dynamics and high-performing collaborative groups: Bruce Tuckman stages of team development (Forming, Storming, Norming, Performing, Adjourning). Psychological safety (Amy Edmondson concept) and its vital role in clinical error reporting and innovation. Roles within multidisciplinary healthcare teams. Socratic questioning methodology: questioning clarification, questioning assumptions, questioning reasons and evidence, questioning viewpoints/perspectives, questioning implications and consequences, and questions about the question. Constructive conflict vs. destructive conflict: principled negotiation (Fisher & Ury getting to yes), active listening, and depersonalizing debate in hospital clinical audits."}, {"Title": "Lecture 10: Evaluating Scientific Claims, Clinical Studies & Media Literacy", "Subject": "Innovation & Critical Thinking", "Content": "Critical appraisal of scientific research literature: separating science from pseudoscience, misinformation, and sensationalized healthcare journalism. CRAAP test for source evaluation: Currency, Relevance, Authority, Accuracy, and Purpose. Key statistical concepts for critical thinkers: sample size, p-value, statistical significance vs. clinical significance, confidence intervals (95% CI), correlation vs. causation, relative risk (RR) vs. absolute risk reduction (ARR), number needed to treat (NNT). Identifying publication bias, p-hacking, conflicts of interest, and predatory journals. Media literacy: recognizing clickbait medical headlines, evaluating social media health influencers, and communicating evidence-based facts to the public."}, {"Title": "Lecture 11: Developing an Innovative Healthcare Project Proposal", "Subject": "Innovation & Critical Thinking", "Content": "Translating innovative healthcare ideas into viable structured project proposals. Components of a technical innovation proposal: Executive summary, problem background and clinical unmet need, target beneficiaries/patients, proposed technological solution, unique value proposition, technical feasibility, project methodology and work breakdown structure (WBS), Gantt chart timeline, required budget and resources, risk mitigation plan, and expected measurable health outcomes/KPIs. Intellectual Property (IP) fundamentals: patents, copyrights, trademarks, trade secrets, and patent search databases (Google Patents, WIPO). Pitching an innovation: crafting an elevator pitch and storytelling techniques for healthcare investors and academic review panels."}, {"Title": "Lecture 12: Course Synthesis, Case Analysis & Final Exam Preparation", "Subject": "Innovation & Critical Thinking", "Content": "Synthesis of core modules: critical thinking, logic, cognitive bias avoidance, design thinking, and healthcare technology innovation. Case study analyses: analyzing historical medical disasters caused by cognitive biases and system failures (e.g., Therac-25 radiation overdose catastrophe, Challenger space shuttle groupthink); analyzing successful medical innovations (e.g., development of low-cost pulse oximeters, portable ultrasound for rural clinics). Individual and group critical problem-solving scenarios simulating clinical technology emergencies. Final review of fallacies, design thinking stages, RCA tools, and exam format."}, {"Title": "Lecture 1: Introduction to Healthcare Professionalism & Role of Applied Health Technologists", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Concept and evolution of professionalism in healthcare. Defining professional attributes: competence, altruism, integrity, accountability, excellence, compassion, and respect. Distinction between a job, occupation, and profession. The emerging role and professional scope of Applied Health Sciences Technologists within the modern healthcare system: operating diagnostic equipment, ensuring measurement precision, safeguarding patient well-being, and collaborating with physicians and nurses. Professional identity formation, self-regulation, dress codes, personal hygiene, emotional intelligence, and upholding public trust in healthcare institutions."}, {"Title": "Lecture 2: Core Principles of Bioethics: Autonomy, Beneficence, Non-Maleficence & Justice", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Foundations of bioethics and the Belmont Report. The four universal principles of biomedical ethics (Beauchamp and Childress): 1. Autonomy: respecting patient self-determination, personal values, and freedom of choice. 2. Beneficence: acting in the patient's best interest, promoting welfare, and contributing to healing. 3. Non-maleficence: 'Primum non nocere' (First, do no harm), avoiding deliberate harm, and minimizing risks/adverse events. 4. Justice: fairness in distribution of healthcare resources, equal treatment for equal needs (distributive justice), and non-discrimination. Resolving ethical conflicts when principles clash (e.g., paternalism vs. autonomy, resource rationing)."}, {"Title": "Lecture 3: Patient Rights, Informed Consent & Confidentiality (Privacy Standards)", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Declaration of patient rights (WHO / international charters): right to high-quality care, information, dignity, privacy, and second medical opinion. Doctrine of Informed Consent: essential elements (disclosure of risks, benefits, and alternatives; patient comprehension; voluntary decision without coercion; competence/capacity). Exceptions to consent: emergencies, therapeutic privilege, legally mandated treatments. Patient assent in minors. Medical confidentiality: fiduciary nature of clinician-patient relationship, legal frameworks (HIPAA standards). Safeguarding electronic health data. Legitimate breaches of confidentiality: court subpoenas, reporting communicable infectious diseases, and mandatory reporting of suspected abuse or harm to self/others."}, {"Title": "Lecture 4: Professional Code of Ethics, Conduct & Accountability in Clinical Practice", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Structure and function of professional codes of ethics for health technologists and allied health practitioners. Ethical duties toward patients, colleagues, the profession, and society. Professional accountability: personal responsibility for one's actions, documentation, and omissions. Professional boundaries: avoiding dual relationships, conflicts of interest, accepting gifts, and inappropriate emotional involvement. Professional misconduct: negligence, incompetence, malpractice, boundary violations, and fraud (e.g., falsifying test logs or calibration records). Disciplinary procedures, professional licensing boards, sanction categories, and whistleblowing ethics."}, {"Title": "Lecture 5: Interprofessional Teamwork, Communication & Hospital Hierarchy", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Interprofessional Collaboration (IPC) and Interprofessional Education (IPE). The multidisciplinary healthcare team: radiologists, medical technologists, physicians, nurses, and administrative staff. Benefits of teamwork: reduced medical errors, improved patient satisfaction, shorter hospital stays, and decreased clinician burnout. Communication breakdowns as primary cause of adverse clinical events. Structured communication tools: SBAR model (Situation, Background, Assessment, Recommendation), Call-Outs, Check-Backs/Closed-loop communication, and Handoff protocols. Navigating hospital organizational hierarchy, speaking up for patient safety (Two-Challenge Rule and CUS words: Concerned, Uncomfortable, Safety Issue), and managing interpersonal conflict constructively."}, {"Title": "Lecture 6: Medical Errors, Patient Safety Culture & Ethical Reporting", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Definition and epidemiology of medical errors (To Err Is Human report). Types of errors: active failures vs. latent system conditions (James Reason Swiss Cheese Model of system accidents). Near misses, adverse events, and sentinel events in diagnostic laboratories and radiology departments. The culture of blame vs. Just Culture: balancing individual accountability with system-level improvement and psychological safety. Ethical obligation of open disclosure: informing patients and families transparently when errors occur, apologizing sincerely, and explaining corrective measures. Incident reporting systems, root cause investigations, and preventing repeat errors."}, {"Title": "Lecture 7: Introduction to Social Issues & Social Determinants of Health", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Definition of social issues and sociological perspectives on health and illness. The Social Determinants of Health (SDOH - WHO framework): 1. Economic stability (income, employment, poverty). 2. Education access and quality (health literacy). 3. Healthcare access and quality (insurance coverage, health system infrastructure). 4. Neighborhood and built environment (housing quality, clean water, pollution, transportation). 5. Social and community context (social cohesion, discrimination, civic participation). How non-medical social factors account for between 30-55% of health outcomes. The biopsychosocial model versus the traditional biomedical model."}, {"Title": "Lecture 8: Health Equity, Access to Healthcare & Vulnerable Populations", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Differentiating health equality (giving everyone the exact same resource) from health equity (distributing resources based on specific needs to achieve equal opportunity for health). Health disparities and inequities rooted in socioeconomic status, geography (urban vs. rural healthcare distribution in Egypt), gender, age, and disability. Vulnerable populations: the elderly, pediatric patients, low-income communities, refugees, migrant workers, and individuals with chronic physical or mental disabilities. Institutional barriers: financial costs, lack of transportation, cultural barriers, and digital divide in telehealth. Strategies for advancing health equity in allied health service delivery."}, {"Title": "Lecture 9: Impact of Technology, Social Media & Attention Economy on Society", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Societal transformation in the digital age. The attention economy: algorithms designed to maximize user engagement, screen addiction, sleep disruption, and mental health implications (anxiety, depression, FOMO). Social media dynamics: echo chambers, cyberbullying, spread of medical misinformation and vaccine hesitancy. Professionalism and social media: guidelines for healthcare professionals (AMA and international standards); strict prohibition of posting patient photos, recognizable clinical details, or protected health information (PHI) online even in private groups. Digital professionalism ('e-professionalism'): managing online personal reputation, maintaining public confidence, and responsible digital citizenship."}, {"Title": "Lecture 10: Environmental Health, Occupational Safety & Public Health Responsibility", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Interconnection between environment and human health (Planetary Health and One Health concepts). Environmental hazards: air pollution, water contamination, hazardous chemicals, and climate change impacts on disease vectors. Occupational safety in hospital and laboratory environments: biological hazards (bloodborne pathogens, sharp injuries, hepatitis B/C, HIV, PPE protocols), chemical hazards (disinfectants, formaldehyde, hazardous reagents), physical hazards (radiation exposure, acoustic noise, slips/trips), and ergonomic hazards (musculoskeletal strain from patient positioning). Biomedical waste management: segregation, color-coded waste bags (yellow for infectious, black for domestic, sharps container), decontamination, and safe disposal. Public health responsibility of health technologists."}, {"Title": "Lecture 11: Cultural Competence, Empathy & Ethical Dilemmas in Modern Medicine", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Cultural competence and cultural humility in healthcare. Culturally congruent care: understanding diverse health beliefs, traditional healing practices, religious dietary restrictions, modesty norms, and end-of-life rituals in multicultural societies. Empathy vs. sympathy in clinical interactions: recognizing patient suffering, perspective-taking, and active compassionate response. Ethical dilemmas in modern medicine: end-of-life care (DNR orders, palliative care, withholding vs. withdrawing life-sustaining treatment), organ donation and brain death criteria, genetic testing and counseling, resource allocation in pandemic emergencies, and artificial intelligence ethics (bias in algorithms, clinical accountability). Structured ethical decision-making frameworks for resolving moral distress."}, {"Title": "Lecture 12: Comprehensive Review of Ethics, Professionalism & Social Issues", "Subject": "Professionalism, Code of Ethics & Social Issues", "Content": "Integrative review synthesizing professionalism, bioethical frameworks, and societal determinants of healthcare. Discussion of high-stakes clinical ethics case studies: handling suspected patient abuse, managing an impaired colleague, responding to an accidental contrast extravasation, navigating religious objections to diagnostic procedures, and balancing patient privacy with family demands. Consolidation of key terminology: autonomy, beneficence, non-maleficence, justice, informed consent, HIPAA, SDOH, health equity, just culture, and cultural humility. Review of expected professional conduct for the licensing examination and upcoming clinical hospital training rotations."}];
+
+let lectures = [];
+let completedSet = new Set();
+let quizStats = { answered: 0, correct: 0 };
+let fcList = [];
+let fcIndex = 0;
+let fcFlipped = false;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem('hue_lectures_v2');
+    const done = localStorage.getItem('hue_completed_v2');
+    if (saved) {
+      lectures = JSON.parse(saved);
+    } else {
+      lectures = [...DEFAULT_LECTURES];
+      saveData();
+    }
+    if (done) {
+      completedSet = new Set(JSON.parse(done));
+    }
+  } catch (e) {
+    lectures = [...DEFAULT_LECTURES];
+  }
+  populateSubjectDropdowns();
+  updateStats();
+  renderLibrary();
+  generateDailyQuiz();
+  initFlashcards();
+}
+
+function saveData() {
+  localStorage.setItem('hue_lectures_v2', JSON.stringify(lectures));
+  localStorage.setItem('hue_completed_v2', JSON.stringify([...completedSet]));
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = lectures.length;
+  document.getElementById('stat-done').textContent = completedSet.size;
+  const pct = quizStats.answered === 0 ? 0 : Math.round((quizStats.correct / quizStats.answered) * 100);
+  document.getElementById('stat-score').textContent = pct + '%';
+}
+
+function populateSubjectDropdowns() {
+  const subjects = [...new Set(lectures.map(l => l.Subject).filter(Boolean))];
+  const ids = ['quiz-subject-filter', 'lib-subject-filter', 'fc-subject-filter'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    const current = el.value;
+    el.innerHTML = '<option value="ALL">كل المواد</option>';
+    subjects.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s;
+      el.appendChild(opt);
+    });
+    if (subjects.includes(current)) el.value = current;
+  });
+
+  const dl = document.getElementById('subjects-datalist');
+  dl.innerHTML = '';
+  subjects.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    dl.appendChild(opt);
+  });
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// --- Automatic Question Generator from Lecture Content ---
+function generateDailyQuiz() {
+  const filter = document.getElementById('quiz-subject-filter').value;
+  const count = parseInt(document.getElementById('quiz-count').value, 10);
+  const pool = filter === 'ALL' ? lectures : lectures.filter(l => l.Subject === filter);
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  if (pool.length === 0) {
+    container.innerHTML = '<p>لا توجد محاضرات متاحة لهذه المادة.</p>';
+    return;
+  }
+
+  quizStats = { answered: 0, correct: 0 };
+  updateStats();
+
+  const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, Math.min(count, pool.length));
+
+  shuffled.forEach((lec, idx) => {
+    const qObj = buildQuestionFromLecture(lec, pool);
+    const box = document.createElement('div');
+    box.className = 'quiz-box';
+    box.innerHTML = `
+      <span class="badge">${lec.Subject}</span>
+      <div style="direction:ltr; text-align:left; font-weight:bold; margin-bottom:8px;">
+        Q${idx + 1}. ${qObj.question}
+      </div>
+    `;
+
+    qObj.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.textContent = opt;
+      btn.onclick = () => {
+        if (box.dataset.answered) return;
+        box.dataset.answered = '1';
+        quizStats.answered++;
+        if (opt === qObj.answer) {
+          btn.classList.add('correct');
+          quizStats.correct++;
+        } else {
+          btn.classList.add('wrong');
+          [...box.querySelectorAll('.quiz-option')].forEach(b => {
+            if (b.textContent === qObj.answer) b.classList.add('correct');
+          });
+        }
+        updateStats();
+      };
+      box.appendChild(btn);
+    });
+
+    container.appendChild(box);
+  });
+}
+
+function buildQuestionFromLecture(lec, pool) {
+  const sentences = (lec.Content || '').split(/\.\s+/).map(s => s.trim()).filter(s => s.length > 25);
+  const cleanTitle = lec.Title.replace(/^Lecture\s*\d+\s*:\s*/i, '');
+
+  // Mode 1: Identify lecture topic from key concept sentence
+  if (sentences.length > 0 && Math.random() > 0.45) {
+    const picked = sentences[Math.floor(Math.random() * sentences.length)];
+    const distractors = lectures
+      .filter(l => l.Title !== lec.Title)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3)
+      .map(l => l.Title.replace(/^Lecture\s*\d+\s*:\s*/i, ''));
+    const options = [cleanTitle, ...distractors].sort(() => Math.random() - 0.5);
+    return {
+      question: `Which lecture topic covers the following concept: "${picked}."?`,
+      options,
+      answer: cleanTitle
+    };
+  }
+
+  // Mode 2: Match key content summary to the lecture title
+  const correctSnippet = sentences[0] ? sentences[0] + '.' : lec.Content.slice(0, 140);
+  const wrongSnippets = lectures
+    .filter(l => l.Title !== lec.Title && l.Content)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3)
+    .map(l => {
+      const s = l.Content.split(/\.\s+/)[0];
+      return (s ? s + '.' : l.Content.slice(0, 140));
+    });
+  const options = [correctSnippet, ...wrongSnippets].sort(() => Math.random() - 0.5);
+  return {
+    question: `Which of the following statements belongs to "${lec.Title}" (${lec.Subject})?`,
+    options,
+    answer: correctSnippet
+  };
+}
+
+// --- Manual Lecture Addition ---
+function addManualLecture() {
+  const subject = document.getElementById('manual-subject').value.trim() || 'General Subject';
+  const title = document.getElementById('manual-title').value.trim();
+  const content = document.getElementById('manual-content').value.trim();
+
+  if (!title || !content) {
+    alert('من فضلك اكتب عنوان المحاضرة ومحتواها أولاً.');
+    return;
+  }
+
+  lectures.unshift({ Title: title, Subject: subject, Content: content });
+  saveData();
+  populateSubjectDropdowns();
+  renderLibrary();
+
+  document.getElementById('manual-title').value = '';
+  document.getElementById('manual-content').value = '';
+
+  // Auto-select this subject and generate quiz immediately
+  document.getElementById('quiz-subject-filter').value = subject;
+  generateDailyQuiz();
+  showToast('تمت إضافة المحاضرة وتوليد أسئلتها تلقائياً!');
+  document.querySelector('.tab-btn').click();
+}
+
+// --- File Upload (CSV / TXT / MD) ---
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    if (file.name.toLowerCase().endsWith('.csv')) {
+      const parsed = parseCSV(text);
+      if (parsed.length > 0) {
+        lectures = [...parsed, ...lectures];
+        saveData();
+        populateSubjectDropdowns();
+        renderLibrary();
+        generateDailyQuiz();
+        showToast(`تم استيراد ${parsed.length} محاضرة من ملف CSV وتوليد الأسئلة!`);
+        document.querySelector('.tab-btn').click();
+      } else {
+        alert('لم يتم العثور على صفوف صالحة في ملف CSV. تأكد من وجود أعمدة Title, Subject, Content.');
+      }
+    } else {
+      // Plain text or Markdown lecture file
+      const title = file.name.replace(/\.[^/.]+$/, '');
+      const subject = document.getElementById('manual-subject').value.trim() || 'Uploaded Notes';
+      lectures.unshift({
+        Title: title,
+        Subject: subject,
+        Content: text.replace(/\s+/g, ' ').trim()
+      });
+      saveData();
+      populateSubjectDropdowns();
+      renderLibrary();
+      document.getElementById('quiz-subject-filter').value = subject;
+      generateDailyQuiz();
+      showToast('تم رفع الملف وتوليد أسئلة اليوم منه تلقائياً!');
+      document.querySelector('.tab-btn').click();
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function parseCSV(str) {
+  const rows = [];
+  let row = [];
+  let val = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    const next = str[i + 1];
+    if (c === '"' && inQuotes && next === '"') {
+      val += '"';
+      i++;
+    } else if (c === '"') {
+      inQuotes = !inQuotes;
+    } else if (c === ',' && !inQuotes) {
+      row.push(val.trim());
+      val = '';
+    } else if ((c === '\n' || (c === '\r' && next === '\n')) && !inQuotes) {
+      if (c === '\r') i++;
+      row.push(val.trim());
+      if (row.some(cell => cell !== '')) rows.push(row);
+      row = [];
+      val = '';
+    } else {
+      val += c;
+    }
+  }
+  if (val || row.length) {
+    row.push(val.trim());
+    if (row.some(cell => cell !== '')) rows.push(row);
+  }
+
+  if (rows.length < 2) return [];
+  const headers = rows[0].map(h => h.toLowerCase());
+  const tIdx = headers.indexOf('title') !== -1 ? headers.indexOf('title') : 0;
+  const sIdx = headers.indexOf('subject') !== -1 ? headers.indexOf('subject') : 1;
+  const cIdx = headers.indexOf('content') !== -1 ? headers.indexOf('content') : 2;
+
+  return rows.slice(1).map(r => ({
+    Title: r[tIdx] || 'Untitled Lecture',
+    Subject: r[sIdx] || 'General',
+    Content: r[cIdx] || ''
+  })).filter(item => item.Content.length > 5);
+}
+
+// --- Library ---
+function renderLibrary() {
+  const subj = document.getElementById('lib-subject-filter').value;
+  const q = document.getElementById('lib-search').value.toLowerCase().trim();
+  const list = document.getElementById('library-list');
+  list.innerHTML = '';
+
+  const filtered = lectures.filter(l => {
+    const matchSubj = subj === 'ALL' || l.Subject === subj;
+    const matchText = !q || l.Title.toLowerCase().includes(q) || l.Content.toLowerCase().includes(q);
+    return matchSubj && matchText;
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted);">لا توجد محاضرات مطابقة للبحث.</p>';
+    return;
+  }
+
+  filtered.forEach(lec => {
+    const key = lec.Subject + '::' + lec.Title;
+    const isDone = completedSet.has(key);
+    const div = document.createElement('div');
+    div.className = 'lecture-item';
+    div.innerHTML = `
+      <span class="badge">${lec.Subject}</span>
+      <h4>${lec.Title}</h4>
+      <p>${lec.Content}</p>
+      <button class="btn ${isDone ? 'btn-green' : 'btn-outline'}" onclick="toggleDone('${key.replace(/'/g, "\\'")}')">
+        ${isDone ? '✅ تمت المذاكرة' : '⬜ تحديد كمذاكرة'}
+      </button>
+      <button class="btn" style="margin-right:6px;" onclick="quizSingleLecture('${lec.Title.replace(/'/g, "\\'")}')">
+        📝 أسئلة على هذه المحاضرة
+      </button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function toggleDone(key) {
+  if (completedSet.has(key)) completedSet.delete(key);
+  else completedSet.add(key);
+  saveData();
+  renderLibrary();
+}
+
+function quizSingleLecture(title) {
+  const lec = lectures.find(l => l.Title === title);
+  if (!lec) return;
+  document.querySelector('.tab-btn').click();
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const qObj = buildQuestionFromLecture(lec, lectures);
+    const box = document.createElement('div');
+    box.className = 'quiz-box';
+    box.innerHTML = `<span class="badge">${lec.Subject}</span><div style="direction:ltr; text-align:left; font-weight:bold;">Q${i+1}. ${qObj.question}</div>`;
+    qObj.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.textContent = opt;
+      btn.onclick = () => {
+        if (opt === qObj.answer) btn.classList.add('correct');
+        else btn.classList.add('wrong');
+      };
+      box.appendChild(btn);
+    });
+    container.appendChild(box);
+  }
+}
+
+// --- Flashcards ---
+function initFlashcards() {
+  const subj = document.getElementById('fc-subject-filter').value;
+  fcList = subj === 'ALL' ? [...lectures] : lectures.filter(l => l.Subject === subj);
+  fcIndex = 0;
+  fcFlipped = false;
+  showFlashcard();
+}
+
+function showFlashcard() {
+  if (fcList.length === 0) return;
+  const item = fcList[fcIndex];
+  document.getElementById('fc-badge').textContent = `${item.Subject} (${fcIndex + 1} / ${fcList.length})`;
+  document.getElementById('fc-front').textContent = item.Title;
+  document.getElementById('fc-back').textContent = item.Content;
+  document.getElementById('fc-back').style.display = fcFlipped ? 'block' : 'none';
+}
+
+function flipFlashcard() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('fc-back').style.display = fcFlipped ? 'block' : 'none';
+}
+
+function nextFlashcard() {
+  if (fcList.length === 0) return;
+  fcIndex = (fcIndex + 1) % fcList.length;
+  fcFlipped = false;
+  showFlashcard();
+}
+
+function prevFlashcard() {
+  if (fcList.length === 0) return;
+  fcIndex = (fcIndex - 1 + fcList.length) % fcList.length;
+  fcFlipped = false;
+  showFlashcard();
+}
+
+function exportCSV() {
+  const escape = v => '"' + String(v || '').replace(/"/g, '""') + '"';
+  const lines = ['Title,Subject,Content', ...lectures.map(l => [escape(l.Title), escape(l.Subject), escape(l.Content)].join(','))];
+  const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'HUE_Lectures_Updated.csv';
+  a.click();
+}
+
+function resetToDefault() {
+  if (!confirm('هل تريد استعادة الـ 84 محاضرة الأصلية وحذف الإضافات اليدوية؟')) return;
+  lectures = [...DEFAULT_LECTURES];
+  completedSet.clear();
+  saveData();
+  populateSubjectDropdowns();
+  renderLibrary();
+  generateDailyQuiz();
+  initFlashcards();
+  showToast('تمت استعادة البيانات الأصلية بنجاح.');
+}
+
+loadData();
+</script>
+</body>
+</html>
