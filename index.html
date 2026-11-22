@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0b1120" />
+  <title>نظامي Pro — العادات الذرية • الإنجليزي • جامعة حورس • الخرائط والمساعد الذكي</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #131c31;
+      --surface-2: #1e293b;
+      --border: #334155;
+      --primary: #38bdf8;
+      --accent: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #a855f7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Tahoma, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 92px;
+      line-height: 1.55;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .brand p {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .points-badge {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--accent);
+      color: #6ee7b7;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+    }
+
+    .pill-group {
+      display: flex;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .pill-btn {
+      flex: 1;
+      padding: 8px 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.82rem;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .pill-btn.active {
+      background: var(--primary);
+      color: #0b1120;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: 0.15s;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary { background: var(--primary); color: #0b1120; }
+    .btn-purple { background: var(--purple); color: #ffffff; }
+    .btn-accent { background: var(--accent); color: #052e16; }
+    .btn-warning { background: var(--warning); color: #451a03; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; }
+    .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
+
+    /* Habit Item */
+    .habit-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .habit-item.done {
+      border-color: var(--accent);
+      opacity: 0.78;
+    }
+
+    .habit-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .habit-info h4 {
+      font-size: 0.96rem;
+      margin-bottom: 3px;
+    }
+
+    .habit-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .habit-2min {
+      background: rgba(245, 158, 11, 0.12);
+      border-right: 3px solid var(--warning);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #fde68a;
+    }
+
+    .habit-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Timer Banner */
+    .timer-box {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--warning);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timer-box.active { display: flex; }
+
+    .timer-display {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--warning);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Inputs */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Flashcards */
+    .flashcard {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid var(--primary);
+      border-radius: 18px;
+      padding: 24px 18px;
+      text-align: center;
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .fc-word {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--primary);
+      direction: ltr;
+    }
+
+    .fc-phonetic {
+      font-size: 0.85rem;
+      color: var(--muted);
+      direction: ltr;
+    }
+
+    .fc-meaning {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #6ee7b7;
+      margin-top: 6px;
+    }
+
+    .fc-example {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      direction: ltr;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
+
+    /* Lists & Cards */
+    .lecture-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+    }
+
+    .badge-accent {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fde68a;
+    }
+
+    /* Map & Places */
+    .map-frame {
+      width: 100%;
+      height: 230px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: #0f172a;
+    }
+
+    .place-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    /* AI Chat */
+    .ai-chat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      height: 310px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .msg {
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 88%;
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+      line-height: 1.55;
+    }
+
+    .msg-user {
+      background: var(--primary);
+      color: #0b1120;
+      align-self: flex-start;
+      font-weight: 600;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-ai {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      align-self: flex-end;
+      border-bottom-left-radius: 4px;
+    }
+
+    .quick-prompts {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    .chip {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .chip:hover {
+      border-color: var(--purple);
+    }
+
+    /* GPA Box */
+    .gpa-result {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.14), rgba(16, 185, 129, 0.14));
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    /* Bottom Nav */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #0f172a;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 2px calc(8px + env(safe-area-inset-bottom));
+      z-index: 60;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+    }
+
+    .nav-btn.ai-nav.active {
+      color: #d8b4fe;
+    }
+
+    .nav-icon {
+      font-size: 1.15rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>نظامي Pro ⚡</h1>
+    <p>العادات • الإنجليزي • حورس • الخرائط • AI</p>
+  </div>
+  <div class="points-badge" id="pointsDisplay">🏆 0 نقطة</div>
+</header>
+
+<div class="container">
+
+  <!-- TAB 1: HABITS -->
+  <section id="tab-habits" class="tab-content active">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">إنجاز اليوم</div>
+          <div class="habit-meta" id="habitStatsText">0 من 0 مهام مكتملة</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="resetDailyHabits()">🔄 يوم جديد</button>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="habitProgress"></div>
+      </div>
+    </div>
+
+    <div class="pill-group">
+      <button class="pill-btn active" id="mode-uni" onclick="setDayMode('uni')">🎓 أيام الجامعة (سبت - ثلاثاء)</button>
+      <button class="pill-btn" id="mode-off" onclick="setDayMode('off')">🏠 أيام الإجازة (أربعاء - جمعة)</button>
+    </div>
+
+    <div class="timer-box" id="timerBox">
+      <div>
+        <div style="font-size:0.78rem; color:#fde68a;">⏱ مؤقت قاعدة الدقيقتين</div>
+        <div id="timerHabitTitle" style="font-weight:700; font-size:0.95rem;">المهمة</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="timer-display" id="timerDisplay">02:00</div>
+        <button class="btn btn-accent btn-sm" onclick="finishTimerEarly()">✔ تم</button>
+        <button class="btn btn-danger btn-sm" onclick="stopTimer()">✖</button>
+      </div>
+    </div>
+
+    <div id="habitsList"></div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">➕ إضافة عادة جديدة</div>
+      <div class="form-grid">
+        <input type="text" id="newHabitTitle" placeholder="اسم العادة (مثال: مذاكرة محاضرة التشريح)" />
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="newHabitTwoMin" placeholder="نسخة الدقيقتين (أو اضغط توليد AI)" />
+          <button class="btn btn-purple btn-sm" id="aiTwoMinBtn" onclick="aiGenerateTwoMin()" style="white-space:nowrap;">✨ اقترح AI</button>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <select id="newHabitMode">
+            <option value="both">كل الأيام</option>
+            <option value="uni">أيام الجامعة فقط</option>
+            <option value="off">أيام الإجازة فقط</option>
+          </select>
+          <input type="number" id="newHabitPoints" value="15" min="5" max="100" placeholder="النقاط" style="max-width:110px;" />
+        </div>
+        <button class="btn btn-primary" onclick="addHabit()">إضافة العادة</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: ENGLISH A2 -->
+  <section id="tab-english" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">بطاقات الإنجليزية (A2 → B1)</div>
+          <div class="habit-meta" id="speechStatus">🔊 النطق الصوتي جاهز</div>
+        </div>
+        <span class="badge" id="fcCounter">1 / 1</span>
+      </div>
+
+      <div class="flashcard" onclick="flipCard()">
+        <div class="fc-word" id="fcWord">Diagnosis</div>
+        <div class="fc-phonetic" id="fcPhonetic">/ˌdaɪ.əɡˈnoʊ.sɪs/</div>
+        <div id="fcBack" style="display:none; width:100%;">
+          <div class="fc-meaning" id="fcMeaning">تشخيص طبي</div>
+          <div class="fc-example" id="fcExample" style="margin-top:8px;">The doctor confirmed the diagnosis after the X-ray.</div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-top:8px;">(اضغط على البطاقة لإظهار الترجمة والمثال)</div>
+      </div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:10px;">
+        <button class="btn btn-primary" onclick="speakCurrentWord()">🔊 نطق الكلمة</button>
+        <button class="btn btn-outline" onclick="speakCurrentExample()">🗣️ نطق المثال</button>
+        <button class="btn btn-outline" onclick="speakSlow()">🐢 نطق بطيء</button>
+      </div>
+
+      <div style="display:flex; gap:8px; justify-content:space-between;">
+        <button class="btn btn-outline" style="flex:1;" onclick="prevCard()">⬅ السابق</button>
+        <button class="btn btn-accent" style="flex:1;" onclick="masterCard()">✔ حفظتها (+5)</button>
+        <button class="btn btn-outline" style="flex:1;" onclick="nextCard()">التالي ➡</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">➕ إضافة كلمة (يدوياً أو بالذكاء الاصطناعي)</div>
+      <div class="form-grid">
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="newEnWord" placeholder="اكتب الكلمة بالإنجليزية (مثال: Radiology)" dir="ltr" />
+          <button class="btn btn-purple btn-sm" id="aiEnBtn" onclick="aiAutoFillWord()" style="white-space:nowrap;">✨ أكمل بالـ AI</button>
+        </div>
+        <input type="text" id="newEnMeaning" placeholder="المعنى بالعربية" />
+        <input type="text" id="newEnExample" placeholder="مثال في جملة مستوى A2" dir="ltr" />
+        <button class="btn btn-primary" onclick="addFlashcard()">حفظ البطاقة</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: HORUS UNIVERSITY + GPA + CSV SYNC -->
+  <section id="tab-uni" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">محاضرات جامعة حورس (المستوى الأول)</div>
+          <div class="habit-meta">كلية تكنولوجيا العلوم الصحية التطبيقية • فاينل 12 ديسمبر</div>
+        </div>
+        <span class="badge" id="uniProgressBadge">0% مكتمل</span>
+      </div>
+      <select id="subjectFilter" onchange="renderLectures()" style="margin-top:6px;">
+        <option value="ALL">كل المواد الدراسية</option>
+        <option value="Human Anatomy">Human Anatomy (التشريح)</option>
+        <option value="Biophysics">Biophysics (الفيزياء الحيوية)</option>
+        <option value="Medical Terminology">Medical Terminology (المصطلحات الطبية)</option>
+        <option value="Information Technology">Information Technology (تكنولوجيا المعلومات)</option>
+        <option value="English (1)">English (1)</option>
+        <option value="Professionalism & Ethics">Professionalism & Ethics (أخلاقيات المهنة)</option>
+        <option value="Innovation & Critical Thinking">Innovation & Critical Thinking</option>
+        <option value="Social Issues">Social Issues (قضايا مجتمعية)</option>
+      </select>
+    </div>
+
+    <div id="lecturesList"></div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">📂 إضافة محاضرة أو ملف يدوياً</div>
+      <div class="form-grid">
+        <select id="lecSubject">
+          <option value="Human Anatomy">Human Anatomy (التشريح)</option>
+          <option value="Biophysics">Biophysics (الفيزياء الحيوية)</option>
+          <option value="Medical Terminology">Medical Terminology (المصطلحات الطبية)</option>
+          <option value="Information Technology">Information Technology (تكنولوجيا المعلومات)</option>
+          <option value="English (1)">English (1)</option>
+          <option value="Professionalism & Ethics">Professionalism & Ethics (أخلاقيات المهنة)</option>
+          <option value="Innovation & Critical Thinking">Innovation & Critical Thinking</option>
+          <option value="Social Issues">Social Issues (قضايا مجتمعية)</option>
+        </select>
+        <input type="text" id="lecTitle" placeholder="عنوان المحاضرة (مثال: Lecture 9 - Skeletal System)" />
+        <input type="url" id="lecLink" placeholder="رابط الملف (Google Drive / SharePoint / PDF) اختياري" dir="ltr" />
+        <textarea id="lecNotes" rows="2" placeholder="ملاحظات سريعة أو أهم النقاط للامتحان..."></textarea>
+        <button class="btn btn-primary" onclick="addLecture()">إضافة المحاضرة</button>
+      </div>
+    </div>
+
+    <!-- Google Sheets CSV Auto Sync -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:6px;">🔄 مزامنة محاضرات Google Sheets (CSV)</div>
+      <p class="habit-meta" style="margin-bottom:10px;">ضع رابط شيت المحاضرات المنشور بصيغة CSV لجلب المحاضرات تلقائياً:</p>
+      <div style="display:flex; gap:8px;">
+        <input type="url" id="csvSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv" dir="ltr" />
+        <button class="btn btn-accent btn-sm" onclick="syncFromGoogleSheetCsv()" style="white-space:nowrap;">مزامنة الآن</button>
+      </div>
+    </div>
+
+    <!-- HUE GPA Calculator -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:8px;">🧮 حاسبة المعدل التراكمي (GPA) — جامعة حورس</div>
+      <div id="gpaInputs" class="form-grid"></div>
+      <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="calculateHUEGPA()">احسب المعدل المتوقع</button>
+      <div class="gpa-result" id="gpaResultBox" style="display:none;"></div>
+    </div>
+  </section>
+
+  <!-- TAB 4: SMART MAPS & LOCATIONS -->
+  <section id="tab-maps" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🗺️ الخرائط، الأماكن، وخط السير</div>
+          <div class="habit-meta">الزرقا • دمياط الجديدة (جامعة حورس) • الجيم • القهوة</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="locateMe()">📍 موقعي الحالي</button>
+      </div>
+
+      <iframe
+        id="mapIframe"
+        class="map-frame"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=31.60%2C31.20%2C31.85%2C31.48&layer=mapnik&marker=31.4346%2C31.6766">
+      </iframe>
+
+      <div id="gpsStatus" class="habit-meta" style="margin-bottom:10px;">اختر وجهة من القائمة بالأسفل لعرضها على الخريطة أو فتح الاتجاهات في خرائط جوجل.</div>
+      <div id="placesList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">➕ حفظ مكان جديد في خرائطي</div>
+      <div class="form-grid">
+        <input type="text" id="newPlaceName" placeholder="اسم المكان (مثال: سنتر الكيك بوكسينج / القهوة)" />
+        <input type="text" id="newPlaceCity" placeholder="المنطقة (مثال: الزرقا / دمياط الجديدة)" />
+        <input type="text" id="newPlaceQuery" placeholder="كلمة البحث في الخريطة (مثال: Horus University New Damietta)" dir="ltr" />
+        <button class="btn btn-primary" onclick="addSavedPlace()">حفظ المكان</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: SMART AI ASSISTANT -->
+  <section id="tab-ai" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🤖 المساعد الذكي (نظام هجين)</div>
+          <div class="habit-meta" id="aiEngineStatus">⚡ يعمل بالمحرك الذكي المدمج + يدعم Gemini API</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="toggleAiSettings()">⚙️ إعدادات API</button>
+      </div>
+
+      <div id="aiSettingsBox" style="display:none; background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--border); margin-bottom:12px;">
+        <div style="font-size:0.82rem; font-weight:700; color:#d8b4fe; margin-bottom:6px;">🔑 ربط مفتاح Google Gemini API (اختياري):</div>
+        <p class="habit-meta" style="margin-bottom:8px;">التطبيق يشتغل تلقائياً بذكاء مدمج حتى بدون مفتاح، ولو حطيت مفتاح Gemini المجاني هيرد على أي سؤال معقد في أي مادة.</p>
+        <div style="display:flex; gap:8px;">
+          <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." dir="ltr" />
+          <button class="btn btn-purple btn-sm" onclick="saveApiKey()">حفظ</button>
+        </div>
+      </div>
+
+      <div class="quick-prompts">
+        <button class="chip" onclick="sendQuickPrompt('اشرح لي مصطلح طبي في التشريح أو الفيزياء الحيوية')">🩺 شرح مصطلح طبي</button>
+        <button class="chip" onclick="sendQuickPrompt('اعطني 5 كلمات إنجليزي A2 طبية مع أمثلة')">🇬🇧 5 كلمات A2 جديدة</button>
+        <button class="chip" onclick="sendQuickPrompt('اعمل لي خطة مذاكرة سريعة لامتحانات 12 ديسمبر')">📅 خطة فاينل ديسمبر</button>
+        <button class="chip" onclick="sendQuickPrompt('كسلان ومش قادر أبدأ مذاكرة دلوقتي')">⚡ تحفيز قاعدة الدقيقتين</button>
+      </div>
+
+      <div class="ai-chat-box" id="aiChatBox">
+        <div class="msg msg-ai">أهلاً يا علي! 👋 أنا مساعدك الذكي في تطبيق نظامي Pro.
+اسألني في التشريح، الفيزياء الحيوية، المصطلحات الطبية، الإنجليزي A2، أو تنظيم مذاكرتك لفاينل ديسمبر 👇</div>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="aiUserInput" placeholder="اسأل المساعد الذكي هنا..." onkeydown="if(event.key==='Enter') handleAiSend()" />
+        <button class="btn btn-purple" id="aiSendBtn" onclick="handleAiSend()">إرسال</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 6: REWARDS & BACKUP -->
+  <section id="tab-rewards" class="tab-content">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:6px;">🎁 متجر المكافآت</div>
+      <p class="habit-meta" style="margin-bottom:12px;">استبدل نقاطك بمكافآت حلال وممتعة بدون تأنيب ضمير</p>
+      <div id="rewardsList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">➕ إضافة مكافأة مخصصة</div>
+      <div class="form-grid">
+        <input type="text" id="newRewardTitle" placeholder="اسم المكافأة (مثال: حلقة ون بيس أو ماتش برشلونة)" />
+        <input type="number" id="newRewardCost" value="50" min="10" step="5" placeholder="التكلفة بالنقاط" />
+        <button class="btn btn-primary" onclick="addReward()">إضافة المكافأة</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:8px;">💾 النسخ الاحتياطي ونقل البيانات</div>
+      <p class="habit-meta" style="margin-bottom:12px;">احفظ نسخة من بياناتك على جهازك أو انقلها بين الموبايل واللابتوب.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="exportData()">⬇ تصدير البيانات (JSON)</button>
+        <label class="btn btn-outline" style="cursor:pointer;">
+          ⬆ استيراد بيانات
+          <input type="file" accept=".json" onchange="importData(event)" style="display:none;" />
+        </label>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('habits', this)">
+    <span class="nav-icon">✅</span>
+    <span>العادات</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('english', this)">
+    <span class="nav-icon">🇬🇧</span>
+    <span>الإنجليزي</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('uni', this)">
+    <span class="nav-icon">🏥</span>
+    <span>الجامعة</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('maps', this)">
+    <span class="nav-icon">🗺️</span>
+    <span>الخرائط</span>
+  </button>
+  <button class="nav-btn ai-nav" onclick="switchTab('ai', this)">
+    <span class="nav-icon">🤖</span>
+    <span>الذكاء</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('rewards', this)">
+    <span class="nav-icon">🏆</span>
+    <span>المكافآت</span>
+  </button>
+</nav>
+
+<script>
+  const STORAGE_KEY = 'nizami_pro_complete_v5';
+
+  const defaultData = {
+    points: 50,
+    dayMode: 'uni',
+    geminiApiKey: '',
+    csvSheetUrl: '',
+    habits: [
+      { id: 1, title: 'مذاكرة محاضرة اليوم (Anki / NotebookLM)', twoMin: 'افتح الملخص واقرأ أول 5 مصطلحات فقط', mode: 'both', points: 25, done: false },
+      { id: 2, title: 'حفظ 10 كلمات إنجليزي + نطق', twoMin: 'اسمع وانطق 3 بطاقات فقط من تبويب الإنجليزي', mode: 'both', points: 15, done: false },
+      { id: 3, title: 'تمرين الجيم أو الكيك بوكسينج + بطن', twoMin: 'البس لبس التمرين واعمل 10 عدات ضغط', mode: 'both', points: 25, done: false },
+      { id: 4, title: 'قراءة كتاب جدد حياتك', twoMin: 'اقرأ صفحة واحدة فقط قبل النوم', mode: 'both', points: 15, done: false },
+      { id: 5, title: 'تدريب Excel / تحليل بيانات (كورس LTC)', twoMin: 'افتح شيت الإكسيل وطبق معادلة واحدة', mode: 'off', points: 20, done: false },
+      { id: 6, title: 'مراجعة محاضرات الجامعة على القهوة بعد الرجوع', twoMin: 'رتب ملفات محاضرات النهاردة في فولدر المادة', mode: 'uni', points: 20, done: false }
+    ],
+    flashcards: [
+      { word: 'Radiology', phonetic: '/ˌreɪ.diˈɑː.lə.dʒi/', meaning: 'علم الأشعة والتصوير الطبي', example: 'He plans to specialize in radiology and medical imaging.' },
+      { word: 'Diagnosis', phonetic: '/ˌdaɪ.əɡˈnoʊ.sɪs/', meaning: 'تشخيص المرض', example: 'Early diagnosis helps doctors treat patients effectively.' },
+      { word: 'Anatomy', phonetic: '/əˈnæt.ə.mi/', meaning: 'علم التشريح', example: 'We studied the human skeletal system in anatomy class.' },
+      { word: 'Consistency', phonetic: '/kənˈsɪs.tən.si/', meaning: 'الاستمرارية والثبات', example: 'Consistency is more important than intensity when building habits.' },
+      { word: 'Hypothesis', phonetic: '/haɪˈpɑː.θə.sɪs/', meaning: 'فرضية علمية', example: 'The students tested their biophysics hypothesis in the lab.' },
+      { word: 'Precise', phonetic: '/prɪˈsaɪs/', meaning: 'دقيق / مضبوط', example: 'Medical technologists must take precise measurements.' }
+    ],
+    lectures: [
+      { id: 101, subject: 'Human Anatomy', title: 'Lecture 1-8: Introduction & Skeletal System', link: '', notes: 'مراجعة أسماء العظام والمفاصل لفاينل ديسمبر', done: true },
+      { id: 102, subject: 'Biophysics', title: 'Artificial Kidneys & Hemodialysis', link: '', notes: 'ملخص البرزنتيشن والقوانين الفيزيائية للغسيل الكلوي', done: true },
+      { id: 103, subject: 'Medical Terminology', title: 'Prefixes, Roots & Suffixes (Body Systems)', link: '', notes: 'تحويل الجذور الطبية لبطاقات Anki', done: false },
+      { id: 104, subject: 'Information Technology', title: 'Attention Economy & Digital Systems', link: '', notes: 'مراجعة البحث والمفاهيم الأساسية', done: false }
+    ],
+    places: [
+      { id: 1, name: 'جامعة حورس — كلية تكنولوجيا العلوم الصحية التطبيقية', city: 'دمياط الجديدة', lat: 31.4346, lon: 31.6766, query: 'Horus University New Damietta' },
+      { id: 2, name: 'مدينة الزرقا (نقطة الانطلاق والعودة)', city: 'الزرقا، دمياط', lat: 31.2089, lon: 31.6347, query: 'El Zarqa Damietta' },
+      { id: 3, name: 'القهوة المفضلة (استراحة المذاكرة بعد الجامعة)', city: 'الزرقا، دمياط', lat: 31.2105, lon: 31.6360, query: 'Cafe El Zarqa Damietta' },
+      { id: 4, name: 'الجيم ومركز تدريب الكيك بوكسينج', city: 'الزرقا، دمياط', lat: 31.2075, lon: 31.6330, query: 'Gym El Zarqa Damietta' }
+    ],
+    rewards: [
+      { id: 1, title: 'مشاهدة حلقة أنمي (One Piece / Blue Lock)', cost: 40 },
+      { id: 2, title: 'ماتش شطرنج بتركيز أو لفة في Clash of Clans', cost: 30 },
+      { id: 3, title: 'ساعة راحة على القهوة مع كاكاو خام', cost: 50 },
+      { id: 4, title: 'فيلم كوميدي مصري على WATCH IT', cost: 80 }
+    ]
+  };
+
+  let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultData;
+  let currentCardIndex = 0;
+  let isCardFlipped = false;
+
+  // Timer variables
+  let timerInterval = null;
+  let timerSeconds = 120;
+  let activeTimerHabitId = null;
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    updatePointsUI();
+  }
+
+  function updatePointsUI() {
+    document.getElementById('pointsDisplay').textContent = `🏆 ${state.points} نقطة`;
+  }
+
+  // --- NAVIGATION ---
+  function switchTab(tabName, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // --- HABITS LOGIC ---
+  function setDayMode(mode) {
+    state.dayMode = mode;
+    document.getElementById('mode-uni').classList.toggle('active', mode === 'uni');
+    document.getElementById('mode-off').classList.toggle('active', mode === 'off');
+    saveState();
+    renderHabits();
+  }
+
+  function renderHabits() {
+    const list = document.getElementById('habitsList');
+    list.innerHTML = '';
+
+    const filtered = state.habits.filter(h => h.mode === 'both' || h.mode === state.dayMode);
+    const completedCount = filtered.filter(h => h.done).length;
+    const pct = filtered.length ? Math.round((completedCount / filtered.length) * 100) : 0;
+
+    document.getElementById('habitStatsText').textContent = `${completedCount} من ${filtered.length} مهام مكتملة (${pct}%)`;
+    document.getElementById('habitProgress').style.width = `${pct}%`;
+
+    filtered.forEach(h => {
+      const div = document.createElement('div');
+      div.className = `habit-item ${h.done ? 'done' : ''}`;
+      div.innerHTML = `
+        <div class="habit-top">
+          <div class="habit-info">
+            <h4>${h.done ? '✅' : '⬜'} ${escapeHtml(h.title)}</h4>
+            <div class="habit-meta">المكافأة: +${h.points} نقطة</div>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="deleteHabit(${h.id})" title="حذف">🗑</button>
+        </div>
+        ${h.twoMin ? `<div class="habit-2min">⚡ <strong>قاعدة الدقيقتين:</strong> ${escapeHtml(h.twoMin)}</div>` : ''}
+        <div class="habit-actions">
+          <button class="btn ${h.done ? 'btn-outline' : 'btn-accent'} btn-sm" onclick="toggleHabit(${h.id})">
+            ${h.done ? 'تراجع' : '✔ تم الإنجاز'}
+          </button>
+          ${!h.done ? `<button class="btn btn-warning btn-sm" onclick="startTwoMinTimer(${h.id})">⏱ ابدأ دقيقتين</button>` : ''}
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function toggleHabit(id) {
+    const habit = state.habits.find(h => h.id === id);
+    if (!habit) return;
+    habit.done = !habit.done;
+    state.points += habit.done ? habit.points : -habit.points;
+    if (state.points < 0) state.points = 0;
+    if (activeTimerHabitId === id && habit.done) stopTimer();
+    saveState();
+    renderHabits();
+  }
+
+  function addHabit() {
+    const title = document.getElementById('newHabitTitle').value.trim();
+    const twoMin = document.getElementById('newHabitTwoMin').value.trim();
+    const mode = document.getElementById('newHabitMode').value;
+    const points = parseInt(document.getElementById('newHabitPoints').value, 10) || 15;
+    if (!title) return alert('اكتب اسم العادة أولاً');
+
+    state.habits.push({
+      id: Date.now(),
+      title,
+      twoMin,
+      mode,
+      points,
+      done: false
+    });
+    document.getElementById('newHabitTitle').value = '';
+    document.getElementById('newHabitTwoMin').value = '';
+    saveState();
+    renderHabits();
+  }
+
+  function deleteHabit(id) {
+    state.habits = state.habits.filter(h => h.id !== id);
+    saveState();
+    renderHabits();
+  }
+
+  function resetDailyHabits() {
+    if (!confirm('هل تريد تصفير علامات الإنجاز لبدء يوم جديد؟ (نقاطك ستظل محفوظة)')) return;
+    state.habits.forEach(h => h.done = false);
+    saveState();
+    renderHabits();
+  }
+
+  // --- 2-MINUTE RULE TIMER ---
+  function startTwoMinTimer(habitId) {
+    const habit = state.habits.find(h => h.id === habitId);
+    if (!habit) return;
+    stopTimer();
+    activeTimerHabitId = habitId;
+    timerSeconds = 120;
+    document.getElementById('timerHabitTitle').textContent = habit.title;
+    document.getElementById('timerBox').classList.add('active');
+    updateTimerDisplay();
+
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      updateTimerDisplay();
+      if (timerSeconds <= 0) finishTimerEarly();
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+    const s = String(timerSeconds % 60).padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+  }
+
+  function finishTimerEarly() {
+    if (activeTimerHabitId !== null) {
+      const habit = state.habits.find(h => h.id === activeTimerHabitId);
+      if (habit && !habit.done) {
+        habit.done = true;
+        state.points += habit.points;
+        saveState();
+        renderHabits();
+      }
+    }
+    stopTimer();
+    alert('عاش يا بطل! أتممت الدقيقتين وكسرت حاجز التسويف وحصلت على نقاطك 🎉');
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    activeTimerHabitId = null;
+    document.getElementById('timerBox').classList.remove('active');
+  }
+
+  // --- ENGLISH FLASHCARDS & ROBUST SPEECH SYNTHESIS ---
+  let preferredVoice = null;
+
+  function loadVoices() {
+    if (!('speechSynthesis' in window)) {
+      document.getElementById('speechStatus').textContent = '⚠️ المتصفح لا يدعم النطق الصوتي';
+      return;
+    }
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+      preferredVoice =
+        voices.find(v => v.lang === 'en-US' && v.name.includes('Samantha')) ||
+        voices.find(v => v.lang === 'en-US' && !v.localService) ||
+        voices.find(v => v.lang.startsWith('en-US')) ||
+        voices.find(v => v.lang.startsWith('en'));
+      document.getElementById('speechStatus').textContent = `🔊 الصوت جاهز (${preferredVoice ? preferredVoice.lang : 'en-US'})`;
+    }
+  }
+
+  if ('speechSynthesis' in window) {
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  function speakText(text, rate = 0.95) {
+    if (!('speechSynthesis' in window)) {
+      alert('عذراً، متصفحك لا يدعم ميزة النطق الصوتي.');
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = rate;
+    utterance.pitch = 1;
+    if (preferredVoice) utterance.voice = preferredVoice;
+    setTimeout(() => {
+      window.speechSynthesis.speak(utterance);
+    }, 50);
+  }
+
+  function renderCard() {
+    if (!state.flashcards.length) return;
+    if (currentCardIndex >= state.flashcards.length) currentCardIndex = 0;
+    const card = state.flashcards[currentCardIndex];
+    document.getElementById('fcWord').textContent = card.word;
+    document.getElementById('fcPhonetic').textContent = card.phonetic || '';
+    document.getElementById('fcMeaning').textContent = card.meaning;
+    document.getElementById('fcExample').textContent = card.example || '';
+    document.getElementById('fcCounter').textContent = `${currentCardIndex + 1} / ${state.flashcards.length}`;
+    isCardFlipped = false;
+    document.getElementById('fcBack').style.display = 'none';
+  }
+
+  function flipCard() {
+    isCardFlipped = !isCardFlipped;
+    document.getElementById('fcBack').style.display = isCardFlipped ? 'block' : 'none';
+  }
+
+  function speakCurrentWord() {
+    const card = state.flashcards[currentCardIndex];
+    if (card) speakText(card.word, 0.92);
+  }
+
+  function speakSlow() {
+    const card = state.flashcards[currentCardIndex];
+    if (card) speakText(card.word, 0.6);
+  }
+
+  function speakCurrentExample() {
+    const card = state.flashcards[currentCardIndex];
+    if (card && card.example) speakText(card.example, 0.92);
+  }
+
+  function nextCard() {
+    currentCardIndex = (currentCardIndex + 1) % state.flashcards.length;
+    renderCard();
+  }
+
+  function prevCard() {
+    currentCardIndex = (currentCardIndex - 1 + state.flashcards.length) % state.flashcards.length;
+    renderCard();
+  }
+
+  function masterCard() {
+    state.points += 5;
+    saveState();
+    nextCard();
+  }
+
+  function addFlashcard() {
+    const word = document.getElementById('newEnWord').value.trim();
+    const meaning = document.getElementById('newEnMeaning').value.trim();
+    const example = document.getElementById('newEnExample').value.trim();
+    if (!word || !meaning) return alert('اكتب الكلمة ومعناها');
+
+    state.flashcards.push({ word, phonetic: '', meaning, example });
+    document.getElementById('newEnWord').value = '';
+    document.getElementById('newEnMeaning').value = '';
+    document.getElementById('newEnExample').value = '';
+    currentCardIndex = state.flashcards.length - 1;
+    saveState();
+    renderCard();
+  }
+
+  // --- UNIVERSITY LECTURES & CSV SYNC & GPA ---
+  function renderLectures() {
+    const filter = document.getElementById('subjectFilter').value;
+    const list = document.getElementById('lecturesList');
+    list.innerHTML = '';
+
+    const total = state.lectures.length;
+    const doneCount = state.lectures.filter(l => l.done).length;
+    const pct = total ? Math.round((doneCount / total) * 100) : 0;
+    document.getElementById('uniProgressBadge').textContent = `${pct}% مكتمل`;
+
+    const filtered = filter === 'ALL' ? state.lectures : state.lectures.filter(l => l.subject === filter);
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="card" style="text-align:center; color:var(--muted);">لا توجد محاضرات مضافة في هذه المادة بعد.</div>`;
+      return;
+    }
+
+    filtered.forEach(lec => {
+      const div = document.createElement('div');
+      div.className = 'lecture-item';
+      div.style.opacity = lec.done ? '0.75' : '1';
+      div.innerHTML = `
+        <div style="flex:1;">
+          <span class="badge">${escapeHtml(lec.subject)}</span>
+          <h4 style="margin-top:6px; font-size:0.95rem;">${lec.done ? '✅' : '📘'} ${escapeHtml(lec.title)}</h4>
+          ${lec.notes ? `<p class="habit-meta" style="margin-top:4px;">📝 ${escapeHtml(lec.notes)}</p>` : ''}
+          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+            <button class="btn ${lec.done ? 'btn-outline' : 'btn-accent'} btn-sm" onclick="toggleLecture(${lec.id})">
+              ${lec.done ? 'تمت المذاكرة' : '✔ تحديد كمذاكر (+20 نقطة)'}
+            </button>
+            ${lec.link ? `<a href="${escapeHtml(lec.link)}" target="_blank" class="btn btn-primary btn-sm">🔗 فتح الملف</a>` : ''}
+            <button class="btn btn-danger btn-sm" onclick="deleteLecture(${lec.id})">🗑</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function addLecture() {
+    const subject = document.getElementById('lecSubject').value;
+    const title = document.getElementById('lecTitle').value.trim();
+    const link = document.getElementById('lecLink').value.trim();
+    const notes = document.getElementById('lecNotes').value.trim();
+    if (!title) return alert('اكتب عنوان المحاضرة');
+
+    state.lectures.unshift({
+      id: Date.now(),
+      subject,
+      title,
+      link,
+      notes,
+      done: false
+    });
+    document.getElementById('lecTitle').value = '';
+    document.getElementById('lecLink').value = '';
+    document.getElementById('lecNotes').value = '';
+    saveState();
+    renderLectures();
+  }
+
+  function toggleLecture(id) {
+    const lec = state.lectures.find(l => l.id === id);
+    if (!lec) return;
+    lec.done = !lec.done;
+    state.points += lec.done ? 20 : -20;
+    if (state.points < 0) state.points = 0;
+    saveState();
+    renderLectures();
+  }
+
+  function deleteLecture(id) {
+    state.lectures = state.lectures.filter(l => l.id !== id);
+    saveState();
+    renderLectures();
+  }
+
+  async function syncFromGoogleSheetCsv() {
+    const url = document.getElementById('csvSheetUrl').value.trim();
+    if (!url) return alert('الصق رابط Google Sheet CSV أولاً');
+    state.csvSheetUrl = url;
+    saveState();
+
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
+      const rows = text.split('
+').slice(1).filter(r => r.trim());
+      let added = 0;
+      rows.forEach(row => {
+        const cols = row.split(',');
+        if (cols.length >= 2) {
+          const subject = cols[0].trim();
+          const title = cols[1].trim();
+          const link = cols[2] ? cols[2].trim() : '';
+          const exists = state.lectures.some(l => l.title === title && l.subject === subject);
+          if (!exists && title) {
+            state.lectures.unshift({ id: Date.now() + Math.random(), subject, title, link, notes: 'مزامنة تلقائية', done: false });
+            added++;
+          }
+        }
+      });
+      saveState();
+      renderLectures();
+      alert(`تمت المزامنة! تمت إضافة ${added} محاضرة جديدة.`);
+    } catch {
+      alert('تعذر الاتصال بالرابط. تأكد أن الشيت منشور للعامة بصيغة CSV.');
+    }
+  }
+
+  function renderGpaCalculator() {
+    const subjects = [
+      { name: 'Human Anatomy (3 ساعات)', credits: 3 },
+      { name: 'Biophysics (3 ساعات)', credits: 3 },
+      { name: 'Medical Terminology (2 ساعتان)', credits: 2 },
+      { name: 'Information Technology (2 ساعتان)', credits: 2 },
+      { name: 'English (1) (2 ساعتان)', credits: 2 },
+      { name: 'Professionalism & Ethics (2 ساعتان)', credits: 2 },
+      { name: 'Innovation & Thinking (2 ساعتان)', credits: 2 },
+      { name: 'Social Issues (2 ساعتان)', credits: 2 }
+    ];
+    const container = document.getElementById('gpaInputs');
+    container.innerHTML = '';
+    subjects.forEach((sub, idx) => {
+      const div = document.createElement('div');
+      div.style.display = 'flex';
+      div.style.justifyContent = 'space-between';
+      div.style.alignItems = 'center';
+      div.style.gap = '8px';
+      div.innerHTML = `
+        <span style="font-size:0.84rem; flex:1;">${sub.name}</span>
+        <select class="gpa-grade" data-credits="${sub.credits}" style="max-width:120px;">
+          <option value="4.0">A+ (4.0)</option>
+          <option value="3.7">A (3.7)</option>
+          <option value="3.3">B+ (3.3)</option>
+          <option value="3.0" selected>B (3.0)</option>
+          <option value="2.7">C+ (2.7)</option>
+          <option value="2.3">C (2.3)</option>
+          <option value="2.0">D (2.0)</option>
+        </select>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function calculateHUEGPA() {
+    const selects = document.querySelectorAll('.gpa-grade');
+    let totalPoints = 0;
+    let totalCredits = 0;
+    selects.forEach(sel => {
+      const grade = parseFloat(sel.value);
+      const credits = parseInt(sel.getAttribute('data-credits'), 10);
+      totalPoints += grade * credits;
+      totalCredits += credits;
+    });
+    const gpa = (totalPoints / totalCredits).toFixed(2);
+    const box = document.getElementById('gpaResultBox');
+    box.style.display = 'block';
+    box.innerHTML = `<div style="font-size:0.85rem; color:var(--muted);">المعدل التراكمي المتوقع (18 ساعة معتمدة)</div>
+                     <div style="font-size:1.6rem; font-weight:800; color:var(--primary);">${gpa} / 4.00</div>`;
+  }
+
+  // --- SMART MAPS & PLACES ---
+  function renderPlaces() {
+    const list = document.getElementById('placesList');
+    list.innerHTML = '';
+    state.places.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'place-card';
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.query || p.name)}`;
+      const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.query || p.name)}`;
+      div.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+          <div>
+            <div style="font-weight:700; font-size:0.95rem;">📍 ${escapeHtml(p.name)}</div>
+            <div class="habit-meta">${escapeHtml(p.city)}</div>
+          </div>
+          <button class="btn btn-danger btn-sm" onclick="deletePlace(${p.id})">🗑</button>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+          ${p.lat && p.lon ? `<button class="btn btn-outline btn-sm" onclick="focusMap(${p.lat}, ${p.lon}, '${escapeHtml(p.name)}')">👁 عرض بالخريطة</button>` : ''}
+          <a href="${mapsUrl}" target="_blank" class="btn btn-primary btn-sm">🗺️ خرائط جوجل</a>
+          <a href="${dirUrl}" target="_blank" class="btn btn-accent btn-sm">🧭 اتجاهات الوصول</a>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function focusMap(lat, lon, label) {
+    const delta = 0.015;
+    const bbox = `${lon - delta}%2C${lat - delta}%2C${lon + delta}%2C${lat + delta}`;
+    document.getElementById('mapIframe').src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
+    document.getElementById('gpsStatus').textContent = `📌 معروض الآن: ${label}`;
+  }
+
+  function locateMe() {
+    const status = document.getElementById('gpsStatus');
+    if (!navigator.geolocation) {
+      status.textContent = '⚠️ المتصفح لا يدعم تحديد الموقع الجغرافي.';
+      return;
+    }
+    status.textContent = '⏳ جاري تحديد موقعك الحالي...';
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        focusMap(latitude, longitude, `موقعي الحالي (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+      },
+      () => {
+        status.textContent = '⚠️ تعذر الوصول للموقع. تأكد من تفعيل GPS والسماح للمتصفح.';
+      }
+    );
+  }
+
+  function addSavedPlace() {
+    const name = document.getElementById('newPlaceName').value.trim();
+    const city = document.getElementById('newPlaceCity').value.trim() || 'دمياط';
+    const query = document.getElementById('newPlaceQuery').value.trim() || `${name} ${city}`;
+    if (!name) return alert('اكتب اسم المكان');
+
+    state.places.push({ id: Date.now(), name, city, query });
+    document.getElementById('newPlaceName').value = '';
+    document.getElementById('newPlaceCity').value = '';
+    document.getElementById('newPlaceQuery').value = '';
+    saveState();
+    renderPlaces();
+  }
+
+  function deletePlace(id) {
+    state.places = state.places.filter(p => p.id !== id);
+    saveState();
+    renderPlaces();
+  }
+
+  // --- HYBRID AI ENGINE ---
+  function toggleAiSettings() {
+    const box = document.getElementById('aiSettingsBox');
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    document.getElementById('geminiApiKeyInput').value = state.geminiApiKey || '';
+  }
+
+  function saveApiKey() {
+    state.geminiApiKey = document.getElementById('geminiApiKeyInput').value.trim();
+    saveState();
+    updateAiStatusUI();
+    document.getElementById('aiSettingsBox').style.display = 'none';
+    alert(state.geminiApiKey ? 'تم حفظ مفتاح Gemini بنجاح! التفعيل السحابي يعمل الآن ✨' : 'تم المسح والرجوع للذكاء المدمج المحلي.');
+  }
+
+  function updateAiStatusUI() {
+    const el = document.getElementById('aiEngineStatus');
+    if (state.geminiApiKey) {
+      el.textContent = '🟢 متصل بمحرك Google Gemini API السحابي';
+    } else {
+      el.textContent = '⚡ يعمل بالمحرك الذكي المدمج (أوفلاين/أونلاين بدون مفتاح)';
+    }
+  }
+
+  async function callSmartAI(promptText) {
+    if (state.geminiApiKey) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(state.geminiApiKey)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: "أنت مساعد دراسي وتنظيمي ذكي للطالب علي (طالب مستوى أول كلية تكنولوجيا العلوم الصحية التطبيقية جامعة حورس، مستواه A2 في الإنجليزية، ويطبق كتاب العادات الذرية). أجب بالعربية بأسلوب عملي ومختصر وواضح." }]
+            },
+            contents: [{ parts: [{ text: promptText }] }]
+          })
+        });
+        const data = await res.json();
+        if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+          return data.candidates[0].content.parts[0].text;
+        }
+      } catch (err) {
+        console.warn('Gemini API fallback:', err);
+      }
+    }
+    return builtInIntelligentResponder(promptText);
+  }
+
+  function builtInIntelligentResponder(q) {
+    const lower = q.toLowerCase();
+    const medDict = {
+      'anterior': 'Anterior (أمامي / Ventral): يشير إلى مقدمة الجسم. مثال: عظمة القص (Sternum) تقع في الجزء الأمامي للصدر.',
+      'posterior': 'Posterior (خلفي / Dorsal): يشير إلى ظهر أو مؤخرة الجسم. مثال: العمود الفقري يقع في الجهة الخلفية.',
+      'superior': 'Superior (علوي / Cranial): أقرب إلى الرأس أو أعلى الجسم. مثال: الرأس Superior بالنسبة للرقبة.',
+      'inferior': 'Inferior (سفلي / Caudal): أبعد عن الرأس أو أسفل الجسم. مثال: المعدة Inferior بالنسبة للرئتين.',
+      'medial': 'Medial (إنسي / داخلي): أقرب إلى الخط المنتصف للجسم (Midline).',
+      'lateral': 'Lateral (وحشي / جانبي): أبعد عن الخط المنتصف للجسم باتجاه الجوانب.',
+      'proximal': 'Proximal (قريب): أقرب إلى نقطة اتصال الطرف بالجذع (مثال: الكوع Proximal بالنسبة للرسغ).',
+      'distal': 'Distal (بعيد): أبعد عن نقطة اتصال الطرف بالجذع (مثال: الأصابع Distal بالنسبة للكوع).',
+      'hemodialysis': 'Hemodialysis (الغسيل الكلوي الدموي): عملية تنقية الدم من الفضلات والسوائل الزائدة باستخدام جهاز الكلى الصناعية عبر الانتشار (Diffusion) والترشيح الفائق (Ultrafiltration).',
+      'osmosis': 'Osmosis (الخاصية الأسموزية): انتقال جزيئات الماء عبر غشاء شبه منفذ من التركيز الأقل للأملاح إلى التركيز الأعلى.',
+      'diffusion': 'Diffusion (الانتشار): انتقال الجزيئات من الوسط الأعلى تركيزاً إلى الوسط الأقل تركيزاً حتى يحدث اتزان.'
+    };
+
+    for (const [term, explanation] of Object.entries(medDict)) {
+      if (lower.includes(term)) {
+        return `🩺 **شرح المصطلح الطبي:**
+${explanation}
+
+💡 أضف المصطلح في تبويب الإنجليزي أو بطاقات Anki عشان يثبت قبل امتحان ديسمبر.`;
+      }
+    }
+
+    if (lower.includes('مصطلح') || lower.includes('تشريح') || lower.includes('anatomy') || lower.includes('biophysics')) {
+      return `🩺 **أهم مصطلحات التشريح والفيزياء الحيوية:**
+• **Anterior / Posterior**: أمامي / خلفي.
+• **Superior / Inferior**: علوي / سفلي.
+• **Medial / Lateral**: قريب من المنتصف / جانبي.
+• **Proximal / Distal**: قريب من الجذع / بعيد عن الجذع.
+
+اكتب أي مصطلح إنجليزي محدد (مثل Osmosis أو Proximal) وهشرحهولك فوراً!`;
+    }
+
+    if (lower.includes('كلمات') || lower.includes('انجليزي') || lower.includes('a2')) {
+      return `🇬🇧 **5 كلمات إنجليزي (A2) مفيدة لدراستك:**
+1. **Symptom** (عَرَض مرضي): Fever is a common symptom of infection.
+2. **Treatment** (علاج): The patient responded well to the treatment.
+3. **Scan** (فحص بالأشعة): The doctor ordered a CT scan.
+4. **Prevent** (يمنع / يقي): Exercise helps prevent heart disease.
+5. **Measure** (يقيس): Nurses measure blood pressure every day.`;
+    }
+
+    if (lower.includes('خطة') || lower.includes('فاينل') || lower.includes('ديسمبر') || lower.includes('مذاكرة')) {
+      const pendingLecs = state.lectures.filter(l => !l.done).length;
+      return `📅 **خطة الإنقاذ لفاينل 12 ديسمبر:**
+عندك حالياً **${pendingLecs}** محاضرات غير مكتملة.
+1️⃣ **أيام الجامعة (سبت - ثلاثاء):** ذاكر محاضرة واحدة فقط بتركيز 45 دقيقة بعد الرجوع والراحة.
+2️⃣ **أيام الإجازة (أربعاء - جمعة):** بلوك صباحي لمادة ثقيلة (Anatomy / Biophysics) وبلوك مسائي لمادة خفيفة (Terminology / IT).
+3️⃣ **القاعدة الذهبية:** شغل مؤقت الدقيقتين واقرأ أول صفحتين بس لو حسيت بتقل!`;
+    }
+
+    if (lower.includes('كسلان') || lower.includes('مش قادر') || lower.includes('تحفيز') || lower.includes('دقيقتين')) {
+      return `⚡ **بروتوكول كسر التسويف:**
+افتح أول مهمة في تبويب (العادات) واضغط **⏱ ابدأ دقيقتين** واقرأ أول صفحة فقط. الهدف إنك متكسرش السلسلة!`;
+    }
+
+    return `🤖 فهمت سؤالك: "${q}"
+
+أقدر أساعدك فوراً في:
+• شرح مصطلحات **Anatomy & Biophysics** (اكتب اسم المصطلح بالإنجليزي).
+• توليد **كلمات وجمل إنجليزي A2**.
+• عمل **خطة مذاكرة لفاينل ديسمبر**.
+
+💡 *لو حابب إجابات مفتوحة في كل العلوم، أضف مفتاح Gemini المجاني من زر (⚙️ إعدادات API) فوق.*`;
+  }
+
+  function appendChatMessage(text, isUser = false) {
+    const box = document.getElementById('aiChatBox');
+    const div = document.createElement('div');
+    div.className = `msg ${isUser ? 'msg-user' : 'msg-ai'}`;
+    div.textContent = text;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  async function handleAiSend() {
+    const input = document.getElementById('aiUserInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    appendChatMessage(text, true);
+
+    const btn = document.getElementById('aiSendBtn');
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    const reply = await callSmartAI(text);
+    appendChatMessage(reply, false);
+
+    btn.disabled = false;
+    btn.textContent = 'إرسال';
+  }
+
+  function sendQuickPrompt(promptText) {
+    document.getElementById('aiUserInput').value = promptText;
+    handleAiSend();
+  }
+
+  async function aiGenerateTwoMin() {
+    const title = document.getElementById('newHabitTitle').value.trim();
+    if (!title) return alert('اكتب اسم العادة الأول!');
+
+    const btn = document.getElementById('aiTwoMinBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳...';
+
+    if (state.geminiApiKey) {
+      const res = await callSmartAI(`اكتب نسخة قاعدة الدقيقتين لهذه العادة في سطر واحد قصير بدون مقدمات: "${title}"`);
+      document.getElementById('newHabitTwoMin').value = res.replace(/
+/g, ' ').trim();
+    } else {
+      let suggestion = `افتح أدوات "${title}" وابدأ بأول خطوة بسيطة لمدة دقيقتين فقط`;
+      if (title.includes('مذاكرة') || title.includes('محاضرة')) suggestion = 'افتح ملف المحاضرة واقرأ العناوين الرئيسية وأول صفحة فقط';
+      else if (title.includes('تمرين') || title.includes('جيم') || title.includes('بطن')) suggestion = 'البس لبس التمرين واعمل 10 عدات إحماء أو بلانك 30 ثانية';
+      else if (title.includes('قراءة') || title.includes('كتاب')) suggestion = 'افتح الكتاب واقرأ صفحة واحدة فقط بتركيز';
+      else if (title.includes('انجليزي') || title.includes('كلمات')) suggestion = 'افتح بطاقات الإنجليزي واسمع وانطق 3 كلمات فقط';
+      else if (title.includes('اكسيل') || title.includes('excel')) suggestion = 'افتح شيت الإكسيل وطبق دالة واحدة فقط';
+      document.getElementById('newHabitTwoMin').value = suggestion;
+    }
+
+    btn.disabled = false;
+    btn.textContent = '✨ اقترح AI';
+  }
+
+  async function aiAutoFillWord() {
+    const word = document.getElementById('newEnWord').value.trim();
+    if (!word) return alert('اكتب الكلمة بالإنجليزية الأول!');
+
+    const btn = document.getElementById('aiEnBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳...';
+
+    const localEnBank = {
+      'skeleton': { m: 'الهيكل العظمي', ex: 'The human skeleton protects vital organs.' },
+      'muscle': { m: 'عضلة', ex: 'Regular exercise makes every muscle stronger.' },
+      'blood': { m: 'دم', ex: 'The heart pumps blood through the body.' },
+      'organ': { m: 'عضو في الجسم', ex: 'The brain is a very complex organ.' },
+      'tissue': { m: 'نسيج حيوي', ex: 'Doctors examined a sample of muscle tissue.' },
+      'patient': { m: 'مريض', ex: 'The patient is recovering well in the hospital.' },
+      'hospital': { m: 'مستشفى', ex: 'She works as a specialist in a large hospital.' },
+      'fracture': { m: 'كسر في العظام', ex: 'The X-ray showed a small fracture in his arm.' },
+      'radiation': { m: 'إشعاع', ex: 'Radiology technicians control radiation doses carefully.' },
+      'kidney': { m: 'كُلية', ex: 'Each kidney filters waste from the blood.' }
+    };
+
+    const key = word.toLowerCase();
+    if (localEnBank[key]) {
+      document.getElementById('newEnMeaning').value = localEnBank[key].m;
+      document.getElementById('newEnExample').value = localEnBank[key].ex;
+    } else if (state.geminiApiKey) {
+      const res = await callSmartAI(`أعطني المعنى بالعربية وجملة إنجليزية بسيطة مستوى A2 للكلمة "${word}" بهذا التنسيق:
+المعنى: ...
+الجملة: ...`);
+      const mMatch = res.match(/المعنى:\s*(.+)/);
+      const exMatch = res.match(/الجملة:\s*(.+)/);
+      if (mMatch) document.getElementById('newEnMeaning').value = mMatch[1].trim();
+      if (exMatch) document.getElementById('newEnExample').value = exMatch[1].trim();
+    } else {
+      document.getElementById('newEnMeaning').value = `ترجمة (${word})`;
+      document.getElementById('newEnExample').value = `We learned the word "${word}" in our university class today.`;
+    }
+
+    btn.disabled = false;
+    btn.textContent = '✨ أكمل بالـ AI';
+  }
+
+  // --- REWARDS ---
+  function renderRewards() {
+    const list = document.getElementById('rewardsList');
+    list.innerHTML = '';
+    state.rewards.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'lecture-item';
+      div.innerHTML = `
+        <div>
+          <div style="font-weight:700; font-size:0.95rem;">${escapeHtml(r.title)}</div>
+          <div class="habit-meta">التكلفة: ${r.cost} نقطة</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-primary btn-sm" onclick="redeemReward(${r.id})">استبدال</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteReward(${r.id})">🗑</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function redeemReward(id) {
+    const reward = state.rewards.find(r => r.id === id);
+    if (!reward) return;
+    if (state.points < reward.cost) {
+      return alert(`نقاطك الحالية (${state.points}) غير كافية. تحتاج ${reward.cost - state.points} نقطة إضافية!`);
+    }
+    if (!confirm(`هل تريد استبدال ${reward.cost} نقطة مقابل: "${reward.title}"؟`)) return;
+    state.points -= reward.cost;
+    saveState();
+    alert(`مبروك! استمتع بمكافأتك: ${reward.title} 🎉`);
+  }
+
+  function addReward() {
+    const title = document.getElementById('newRewardTitle').value.trim();
+    const cost = parseInt(document.getElementById('newRewardCost').value, 10) || 50;
+    if (!title) return alert('اكتب اسم المكافأة');
+    state.rewards.push({ id: Date.now(), title, cost });
+    document.getElementById('newRewardTitle').value = '';
+    saveState();
+    renderRewards();
+  }
+
+  function deleteReward(id) {
+    state.rewards = state.rewards.filter(r => r.id !== id);
+    saveState();
+    renderRewards();
+  }
+
+  // --- EXPORT / IMPORT ---
+  function exportData() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nizami-pro-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (imported && typeof imported.points === 'number') {
+          state = imported;
+          saveState();
+          initApp();
+          alert('تم استيراد البيانات بنجاح!');
+        } else {
+          alert('ملف غير صالح');
+        }
+      } catch {
+        alert('حدث خطأ أثناء قراءة الملف');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+
+  // --- INIT ---
+  function initApp() {
+    updatePointsUI();
+    updateAiStatusUI();
+    if (state.csvSheetUrl) document.getElementById('csvSheetUrl').value = state.csvSheetUrl;
+    document.getElementById('mode-uni').classList.toggle('active', state.dayMode === 'uni');
+    document.getElementById('mode-off').classList.toggle('active', state.dayMode === 'off');
+    renderHabits();
+    renderCard();
+    renderLectures();
+    renderGpaCalculator();
+    renderPlaces();
+    renderRewards();
+  }
+
+  initApp();
+</script>
+</body>
+</html>
