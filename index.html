@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0b1120" />
+  <meta name="author" content="علي هاني العجيري" />
+  <title>نظامي Pro — تطوير: علي هاني العجيري</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #131c31;
+      --surface-2: #1e293b;
+      --border: #334155;
+      --primary: #38bdf8;
+      --accent: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #a855f7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Tahoma, Arial, sans-serif;
+      -webkit-tap-highlight-color: rgba(56, 189, 248, 0.25);
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 108px;
+      line-height: 1.55;
+      touch-action: manipulation;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .brand .dev-tag {
+      font-size: 0.76rem;
+      color: #e2e8f0;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .brand .dev-tag span {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .points-badge {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--accent);
+      color: #6ee7b7;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 14px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-title { font-size: 1.02rem; font-weight: 700; }
+
+    .pill-group {
+      display: flex;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .pill-btn {
+      flex: 1;
+      padding: 8px 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.82rem;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+
+    .pill-btn.active {
+      background: var(--primary);
+      color: #0b1120;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary { background: var(--primary); color: #0b1120; }
+    .btn-purple { background: var(--purple); color: #ffffff; }
+    .btn-accent { background: var(--accent); color: #052e16; }
+    .btn-warning { background: var(--warning); color: #451a03; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; }
+    .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
+
+    .habit-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .habit-item.done { border-color: var(--accent); opacity: 0.78; }
+    .habit-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .habit-info h4 { font-size: 0.96rem; margin-bottom: 3px; }
+    .habit-meta { font-size: 0.78rem; color: var(--muted); }
+
+    .habit-2min {
+      background: rgba(245, 158, 11, 0.12);
+      border-right: 3px solid var(--warning);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #fde68a;
+    }
+
+    .habit-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+    .timer-box {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--warning);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timer-box.active { display: flex; }
+
+    .timer-display {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--warning);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .form-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .flashcard {
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 1px solid var(--primary);
+      border-radius: 18px;
+      padding: 24px 18px;
+      text-align: center;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      margin-bottom: 14px;
+    }
+
+    .fc-category {
+      font-size: 0.74rem;
+      background: rgba(168, 85, 247, 0.18);
+      color: #e9d5ff;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .fc-word { font-size: 1.7rem; font-weight: 800; color: var(--primary); direction: ltr; }
+    .fc-phonetic { font-size: 0.85rem; color: var(--muted); direction: ltr; }
+    .fc-meaning { font-size: 1.22rem; font-weight: 700; color: #6ee7b7; margin-top: 6px; }
+    .fc-example {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      direction: ltr;
+      background: rgba(15, 23, 42, 0.75);
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
+
+    .quiz-option {
+      width: 100%;
+      text-align: right;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+
+    .quiz-option.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--accent); color: #6ee7b7; }
+    .quiz-option.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #fca5a5; }
+
+    .lecture-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+    }
+
+    .map-frame {
+      width: 100%;
+      height: 220px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: #0f172a;
+    }
+
+    .place-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .ai-chat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      height: 300px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .msg {
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 88%;
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+      line-height: 1.55;
+    }
+
+    .msg-user { background: var(--primary); color: #0b1120; align-self: flex-start; font-weight: 600; border-bottom-right-radius: 4px; }
+    .msg-ai { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); align-self: flex-end; border-bottom-left-radius: 4px; }
+
+    .quick-prompts { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; }
+    .chip { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 6px 10px; border-radius: 999px; font-size: 0.75rem; white-space: nowrap; cursor: pointer; }
+
+    .gpa-result {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.14), rgba(16, 185, 129, 0.14));
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .dev-credit-box {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(16, 185, 129, 0.12));
+      border: 1px solid var(--primary);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .dev-credit-box h3 { font-size: 1.05rem; color: var(--primary); margin-bottom: 4px; }
+    .dev-credit-box p { font-size: 0.82rem; color: #cbd5e1; }
+
+    .app-footer { text-align: center; padding: 14px 10px 6px; font-size: 0.78rem; color: var(--muted); }
+    .app-footer strong { color: var(--primary); }
+
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: #0f172a;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      padding: 6px 2px calc(6px + env(safe-area-inset-bottom));
+      z-index: 9999;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 1;
+      padding: 6px 2px;
+      min-height: 52px;
+    }
+
+    .nav-btn * { pointer-events: none; }
+    .nav-btn.active { color: var(--primary); }
+    .nav-btn.ai-nav.active { color: #d8b4fe; }
+    .nav-icon { font-size: 1.2rem; line-height: 1.1; }
+
+    .progress-bar { width: 100%; height: 8px; background: var(--bg); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>نظامي Pro ⚡</h1>
+    <div class="dev-tag">تصميم وتطوير: <span>علي هاني العجيري</span></div>
+  </div>
+  <div class="points-badge" id="pointsDisplay">🏆 0 نقطة</div>
+</header>
+
+<div class="container">
+
+  <!-- TAB 1: HABITS -->
+  <section id="tab-habits" class="tab-content active">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">إنجاز اليوم</div>
+          <div class="habit-meta" id="habitStatsText">0 من 0 مهام مكتملة</div>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="resetDayBtn">🔄 يوم جديد</button>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="habitProgress"></div>
+      </div>
+    </div>
+
+    <div class="pill-group">
+      <button type="button" class="pill-btn active" id="mode-uni" data-mode="uni">🎓 أيام الجامعة (سبت - ثلاثاء)</button>
+      <button type="button" class="pill-btn" id="mode-off" data-mode="off">🏠 أيام الإجازة (أربعاء - جمعة)</button>
+    </div>
+
+    <div class="timer-box" id="timerBox">
+      <div>
+        <div style="font-size:0.78rem; color:#fde68a;">⏱ مؤقت قاعدة الدقيقتين</div>
+        <div id="timerHabitTitle" style="font-weight:700; font-size:0.95rem;">المهمة</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="timer-display" id="timerDisplay">02:00</div>
+        <button type="button" class="btn btn-accent btn-sm" id="timerDoneBtn">✔ تم</button>
+        <button type="button" class="btn btn-danger btn-sm" id="timerStopBtn">✖</button>
+      </div>
+    </div>
+
+    <div id="habitsList"></div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">➕ إضافة عادة جديدة</div>
+      <div class="form-grid">
+        <input type="text" id="newHabitTitle" placeholder="اسم العادة (مثال: مذاكرة محاضرة التشريح)" />
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="newHabitTwoMin" placeholder="نسخة الدقيقتين (أو اضغط توليد AI)" />
+          <button type="button" class="btn btn-purple btn-sm" id="aiTwoMinBtn" style="white-space:nowrap;">✨ اقترح AI</button>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <select id="newHabitMode">
+            <option value="both">كل الأيام</option>
+            <option value="uni">أيام الجامعة فقط</option>
+            <option value="off">أيام الإجازة فقط</option>
+          </select>
+          <input type="number" id="newHabitPoints" value="15" min="5" max="100" placeholder="النقاط" style="max-width:110px;" />
+        </div>
+        <button type="button" class="btn btn-primary" id="addHabitBtn">إضافة العادة</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: ENGLISH A2 -->
+  <section id="tab-english" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">بطاقات الإنجليزية الشاملة (A2 → B1)</div>
+          <div class="habit-meta" id="speechStatus">🔊 النطق الصوتي جاهز</div>
+        </div>
+        <span class="badge" id="fcCounter">1 / 30</span>
+      </div>
+
+      <select id="enCategoryFilter" style="margin-bottom:12px;">
+        <option value="ALL">كل التصنيفات (30 بطاقة غنية)</option>
+        <option value="Medical & Radiology">🩺 مصطلحات طبية وأشعة</option>
+        <option value="Daily & Habits">⚡ العادات والروتين اليومي</option>
+        <option value="Academic & Study">🎓 الدراسة والبحث العلمي</option>
+        <option value="Work & Tech">💻 العمل، الإكسيل، والبيانات</option>
+      </select>
+
+      <div class="flashcard" id="flashcardBox">
+        <span class="fc-category" id="fcCategory">Medical & Radiology</span>
+        <div class="fc-word" id="fcWord">Radiology</div>
+        <div class="fc-phonetic" id="fcPhonetic">/ˌreɪ.diˈɑː.lə.dʒi/</div>
+        <div id="fcBack" style="display:none; width:100%;">
+          <div class="fc-meaning" id="fcMeaning">علم الأشعة والتصوير الطبي</div>
+          <div class="fc-example" id="fcExample" style="margin-top:8px;">Ali plans to specialize in radiology and medical imaging.</div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-top:8px;">(اضغط على البطاقة لإظهار الترجمة والمثال)</div>
+      </div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:10px;">
+        <button type="button" class="btn btn-primary" id="speakWordBtn">🔊 نطق الكلمة</button>
+        <button type="button" class="btn btn-outline" id="speakExampleBtn">🗣️ نطق المثال</button>
+        <button type="button" class="btn btn-outline" id="speakSlowBtn">🐢 نطق بطيء</button>
+        <button type="button" class="btn btn-outline" id="shuffleCardsBtn">🔀 خلط</button>
+      </div>
+
+      <div style="display:flex; gap:8px; justify-content:space-between;">
+        <button type="button" class="btn btn-outline" style="flex:1;" id="prevCardBtn">⬅ السابق</button>
+        <button type="button" class="btn btn-accent" style="flex:1;" id="masterCardBtn">✔ حفظتها (+5)</button>
+        <button type="button" class="btn btn-outline" style="flex:1;" id="nextCardBtn">التالي ➡</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🧠 اختبار سريع للمفردات (A2 Quiz)</div>
+          <div class="habit-meta" id="quizScoreText">اختبر نفسك واكسب +10 نقاط لكل إجابة صحيحة</div>
+        </div>
+        <button type="button" class="btn btn-purple btn-sm" id="newQuizBtn">سؤال جديد</button>
+      </div>
+      <div id="quizQuestionBox" style="font-weight:700; font-size:1rem; margin-bottom:10px; color:var(--primary);"></div>
+      <div id="quizOptionsBox"></div>
+      <div id="quizFeedback" class="habit-meta" style="margin-top:6px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">➕ إضافة كلمة جديدة لقاموسك</div>
+      </div>
+      <div class="form-grid">
+        <select id="newEnCategory">
+          <option value="Medical & Radiology">🩺 مصطلحات طبية وأشعة</option>
+          <option value="Daily & Habits">⚡ العادات والروتين اليومي</option>
+          <option value="Academic & Study">🎓 الدراسة والبحث العلمي</option>
+          <option value="Work & Tech">💻 العمل، الإكسيل، والبيانات</option>
+        </select>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="newEnWord" placeholder="اكتب الكلمة بالإنجليزية (مثال: Ultrasound)" dir="ltr" />
+          <button type="button" class="btn btn-purple btn-sm" id="aiEnBtn" style="white-space:nowrap;">✨ أكمل بالـ AI</button>
+        </div>
+        <input type="text" id="newEnMeaning" placeholder="المعنى بالعربية" />
+        <input type="text" id="newEnExample" placeholder="مثال في جملة مستوى A2" dir="ltr" />
+        <button type="button" class="btn btn-primary" id="addCardBtn">حفظ البطاقة</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: HORUS UNIVERSITY + GPA + CSV SYNC -->
+  <section id="tab-uni" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">محاضرات جامعة حورس (المستوى الأول)</div>
+          <div class="habit-meta">كلية تكنولوجيا العلوم الصحية التطبيقية • فاينل 12 ديسمبر</div>
+        </div>
+        <span class="badge" id="uniProgressBadge">0% مكتمل</span>
+      </div>
+      <select id="subjectFilter" style="margin-top:6px;">
+        <option value="ALL">كل المواد الدراسية (8 مواد)</option>
+        <option value="Human Anatomy">Human Anatomy (التشريح)</option>
+        <option value="Biophysics">Biophysics (الفيزياء الحيوية)</option>
+        <option value="Medical Terminology">Medical Terminology (المصطلحات الطبية)</option>
+        <option value="Information Technology">Information Technology (تكنولوجيا المعلومات)</option>
+        <option value="English (1)">English (1)</option>
+        <option value="Professionalism & Ethics">Professionalism & Ethics (أخلاقيات المهنة)</option>
+        <option value="Innovation & Critical Thinking">Innovation & Critical Thinking</option>
+        <option value="Social Issues">Social Issues (قضايا مجتمعية)</option>
+      </select>
+    </div>
+
+    <div id="lecturesList"></div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">📂 إضافة محاضرة أو ملف يدوياً</div>
+      <div class="form-grid">
+        <select id="lecSubject">
+          <option value="Human Anatomy">Human Anatomy (التشريح)</option>
+          <option value="Biophysics">Biophysics (الفيزياء الحيوية)</option>
+          <option value="Medical Terminology">Medical Terminology (المصطلحات الطبية)</option>
+          <option value="Information Technology">Information Technology (تكنولوجيا المعلومات)</option>
+          <option value="English (1)">English (1)</option>
+          <option value="Professionalism & Ethics">Professionalism & Ethics (أخلاقيات المهنة)</option>
+          <option value="Innovation & Critical Thinking">Innovation & Critical Thinking</option>
+          <option value="Social Issues">Social Issues (قضايا مجتمعية)</option>
+        </select>
+        <input type="text" id="lecTitle" placeholder="عنوان المحاضرة (مثال: Lecture 9 - Skeletal System)" />
+        <input type="url" id="lecLink" placeholder="رابط الملف (Google Drive / SharePoint / PDF) اختياري" dir="ltr" />
+        <textarea id="lecNotes" rows="2" placeholder="ملاحظات سريعة أو أهم النقاط للامتحان..."></textarea>
+        <button type="button" class="btn btn-primary" id="addLectureBtn">إضافة المحاضرة</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:6px;">🔄 مزامنة محاضرات Google Sheets (CSV)</div>
+      <p class="habit-meta" style="margin-bottom:10px;">ضع رابط شيت المحاضرات المنشور بصيغة CSV لجلب المحاضرات تلقائياً:</p>
+      <div style="display:flex; gap:8px;">
+        <input type="url" id="csvSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv" dir="ltr" />
+        <button type="button" class="btn btn-accent btn-sm" id="syncCsvBtn" style="white-space:nowrap;">مزامنة الآن</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:8px;">🧮 حاسبة المعدل التراكمي (GPA) — جامعة حورس</div>
+      <div id="gpaInputs" class="form-grid"></div>
+      <button type="button" class="btn btn-primary" style="width:100%; margin-top:10px;" id="calcGpaBtn">احسب المعدل المتوقع</button>
+      <div class="gpa-result" id="gpaResultBox" style="display:none;"></div>
+    </div>
+  </section>
+
+  <!-- TAB 4: SMART MAPS & LOCATIONS -->
+  <section id="tab-maps" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🗺️ الخرائط، الأماكن، وخط السير</div>
+          <div class="habit-meta">الزرقا • دمياط الجديدة (جامعة حورس) • الجيم • القهوة</div>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="locateMeBtn">📍 موقعي الحالي</button>
+      </div>
+
+      <iframe
+        id="mapIframe"
+        class="map-frame"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=31.60%2C31.20%2C31.85%2C31.48&layer=mapnik&marker=31.4346%2C31.6766">
+      </iframe>
+
+      <div id="gpsStatus" class="habit-meta" style="margin-bottom:10px;">اختر وجهة من القائمة بالأسفل لعرضها على الخريطة أو فتح الاتجاهات في خرائط جوجل.</div>
+      <div id="placesList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">➕ حفظ مكان جديد في خرائطي</div>
+      <div class="form-grid">
+        <input type="text" id="newPlaceName" placeholder="اسم المكان (مثال: سنتر الكيك بوكسينج / القهوة)" />
+        <input type="text" id="newPlaceCity" placeholder="المنطقة (مثال: الزرقا / دمياط الجديدة)" />
+        <input type="text" id="newPlaceQuery" placeholder="كلمة البحث في الخريطة (مثال: Horus University New Damietta)" dir="ltr" />
+        <button type="button" class="btn btn-primary" id="addPlaceBtn">حفظ المكان</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: SMART AI ASSISTANT -->
+  <section id="tab-ai" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🤖 المساعد الذكي (نظام هجين موسّع)</div>
+          <div class="habit-meta" id="aiEngineStatus">⚡ يعمل بالمحرك الذكي المدمج + يدعم Gemini API</div>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="toggleAiSettingsBtn">⚙️ إعدادات API</button>
+      </div>
+
+      <div id="aiSettingsBox" style="display:none; background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--border); margin-bottom:12px;">
+        <div style="font-size:0.82rem; font-weight:700; color:#d8b4fe; margin-bottom:6px;">🔑 ربط مفتاح Google Gemini API (اختياري):</div>
+        <p class="habit-meta" style="margin-bottom:8px;">التطبيق يشتغل تلقائياً بذكاء مدمج حتى بدون مفتاح، ولو حطيت مفتاح Gemini المجاني هيرد على أي سؤال معقد في أي مادة.</p>
+        <div style="display:flex; gap:8px;">
+          <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." dir="ltr" />
+          <button type="button" class="btn btn-purple btn-sm" id="saveApiKeyBtn">حفظ</button>
+        </div>
+      </div>
+
+      <div class="quick-prompts">
+        <button type="button" class="chip" data-prompt="اشرح لي مصطلح طبي في التشريح أو الفيزياء الحيوية">🩺 شرح مصطلح طبي</button>
+        <button type="button" class="chip" data-prompt="اعطني 5 كلمات إنجليزي A2 طبية مع أمثلة">🇬🇧 5 كلمات A2 جديدة</button>
+        <button type="button" class="chip" data-prompt="اعمل لي خطة مذاكرة سريعة لامتحانات 12 ديسمبر">📅 خطة فاينل ديسمبر</button>
+        <button type="button" class="chip" data-prompt="قواعد إنجليزي A2 بسيطة مع أمثلة">📘 قواعد إنجليزي A2</button>
+        <button type="button" class="chip" data-prompt="كسلان ومش قادر أبدأ مذاكرة دلوقتي">⚡ تحفيز قاعدة الدقيقتين</button>
+      </div>
+
+      <div class="ai-chat-box" id="aiChatBox">
+        <div class="msg msg-ai">أهلاً يا علي هاني العجيري! 👋 أنا مساعدك الذكي في تطبيق نظامي Pro.
+اسألني في التشريح، الفيزياء الحيوية، المصطلحات الطبية، الإنجليزي A2 وقواعده، أو تنظيم مذاكرتك لفاينل ديسمبر 👇</div>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="aiUserInput" placeholder="اسأل المساعد الذكي هنا..." />
+        <button type="button" class="btn btn-purple" id="aiSendBtn">إرسال</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 6: REWARDS, ABOUT DEVELOPER & BACKUP -->
+  <section id="tab-rewards" class="tab-content">
+    <div class="dev-credit-box">
+      <h3>👨‍💻 مطور ومصمم التطبيق: علي هاني العجيري</h3>
+      <p>كلية تكنولوجيا العلوم الصحية التطبيقية — جامعة حورس | نظام متكامل لإدارة العادات، الإنجليزية، والدراسة الجامعية.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:6px;">🎁 متجر المكافآت</div>
+      <p class="habit-meta" style="margin-bottom:12px;">استبدل نقاطك بمكافآت حلال وممتعة بدون تأنيب ضمير</p>
+      <div id="rewardsList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;">➕ إضافة مكافأة مخصصة</div>
+      <div class="form-grid">
+        <input type="text" id="newRewardTitle" placeholder="اسم المكافأة (مثال: حلقة ون بيس أو ماتش برشلونة)" />
+        <input type="number" id="newRewardCost" value="50" min="10" step="5" placeholder="التكلفة بالنقاط" />
+        <button type="button" class="btn btn-primary" id="addRewardBtn">إضافة المكافأة</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:8px;">💾 النسخ الاحتياطي ونقل البيانات</div>
+      <p class="habit-meta" style="margin-bottom:12px;">احفظ نسخة من بياناتك على جهازك أو انقلها بين الموبايل واللابتوب.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-outline" id="exportDataBtn">⬇ تصدير البيانات (JSON)</button>
+        <label class="btn btn-outline" style="cursor:pointer;">
+          ⬆ استيراد بيانات
+          <input type="file" id="importDataInput" accept=".json" style="display:none;" />
+        </label>
+        <button type="button" class="btn btn-danger btn-sm" id="resetFactoryBtn">♻ إعادة ضبط المصنع</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="app-footer">
+    جميع الحقوق محفوظة © 2026 — تم التطوير بواسطة <strong>علي هاني العجيري</strong>
+  </footer>
+
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav" id="bottomNav">
+  <button type="button" class="nav-btn active" data-tab="habits">
+    <span class="nav-icon">✅</span>
+    <span>العادات</span>
+  </button>
+  <button type="button" class="nav-btn" data-tab="english">
+    <span class="nav-icon">🇬🇧</span>
+    <span>الإنجليزي</span>
+  </button>
+  <button type="button" class="nav-btn" data-tab="uni">
+    <span class="nav-icon">🏥</span>
+    <span>الجامعة</span>
+  </button>
+  <button type="button" class="nav-btn" data-tab="maps">
+    <span class="nav-icon">🗺️</span>
+    <span>الخرائط</span>
+  </button>
+  <button type="button" class="nav-btn ai-nav" data-tab="ai">
+    <span class="nav-icon">🤖</span>
+    <span>الذكاء</span>
+  </button>
+  <button type="button" class="nav-btn" data-tab="rewards">
+    <span class="nav-icon">🏆</span>
+    <span>المكافآت</span>
+  </button>
+</nav>
+
+<script>
+  const STORAGE_KEY = 'nizami_pro_ali_elegiry_v8';
+
+  const defaultData = {
+    points: 50,
+    quizScore: 0,
+    dayMode: 'uni',
+    geminiApiKey: '',
+    csvSheetUrl: '',
+    habits: [
+      { id: 1, title: 'مذاكرة محاضرة اليوم (Anki / NotebookLM)', twoMin: 'افتح الملخص واقرأ أول 5 مصطلحات فقط', mode: 'both', points: 25, done: false },
+      { id: 2, title: 'حفظ 10 كلمات إنجليزي + نطق + اختبار', twoMin: 'اسمع وانطق 3 بطاقات وجاوب سؤال Quiz واحد', mode: 'both', points: 15, done: false },
+      { id: 3, title: 'تمرين الجيم أو الكيك بوكسينج + بطن', twoMin: 'البس لبس التمرين واعمل 10 عدات ضغط', mode: 'both', points: 25, done: false },
+      { id: 4, title: 'قراءة كتاب جدد حياتك', twoMin: 'اقرأ صفحة واحدة فقط قبل النوم', mode: 'both', points: 15, done: false },
+      { id: 5, title: 'تدريب Excel / تحليل بيانات (كورس LTC)', twoMin: 'افتح شيت الإكسيل وطبق معادلة واحدة', mode: 'off', points: 20, done: false },
+      { id: 6, title: 'مراجعة محاضرات الجامعة على القهوة بعد الرجوع', twoMin: 'رتب ملفات محاضرات النهاردة في فولدر المادة', mode: 'uni', points: 20, done: false }
+    ],
+    flashcards: [
+      // Medical & Radiology (10 cards)
+      { category: 'Medical & Radiology', word: 'Radiology', phonetic: '/ˌreɪ.diˈɑː.lə.dʒi/', meaning: 'علم الأشعة والتصوير الطبي', example: 'Ali plans to specialize in radiology and medical imaging.' },
+      { category: 'Medical & Radiology', word: 'Ultrasound', phonetic: '/ˈʌl.trə.saʊnd/', meaning: 'الموجات فوق الصوتية (السونار)', example: 'Ultrasound uses sound waves to view inside the body.' },
+      { category: 'Medical & Radiology', word: 'X-ray', phonetic: '/ˈeks.reɪ/', meaning: 'الأشعة السينية', example: 'The doctor ordered an X-ray to check the bone.' },
+      { category: 'Medical & Radiology', word: 'Diagnosis', phonetic: '/ˌdaɪ.əɡˈnoʊ.sɪs/', meaning: 'تشخيص المرض', example: 'Early diagnosis helps doctors treat patients safely.' },
+      { category: 'Medical & Radiology', word: 'Symptom', phonetic: '/ˈsɪmp.təm/', meaning: 'عَرَض مرضي', example: 'A high fever can be a symptom of infection.' },
+      { category: 'Medical & Radiology', word: 'Treatment', phonetic: '/ˈtriːt.mənt/', meaning: 'علاج طبي', example: 'Proper treatment speeds up recovery.' },
+      { category: 'Medical & Radiology', word: 'Patient', phonetic: '/ˈpeɪ.ʃənt/', meaning: 'مريض', example: 'Always speak politely and clearly to the patient.' },
+      { category: 'Medical & Radiology', word: 'Circulation', phonetic: '/ˌsɜː.kjəˈleɪ.ʃən/', meaning: 'الدورة الدموية', example: 'Exercise improves blood circulation across the body.' },
+      { category: 'Medical & Radiology', word: 'Tissue', phonetic: '/ˈtɪʃ.uː/', meaning: 'نسيج حيوي', example: 'Muscle tissue contracts to move the skeleton.' },
+      { category: 'Medical & Radiology', word: 'Scan', phonetic: '/skæn/', meaning: 'فحص تصويري / مسح', example: 'The scan showed a clear view of the organ.' },
+
+      // Daily & Habits (8 cards)
+      { category: 'Daily & Habits', word: 'Consistency', phonetic: '/kənˈsɪs.tən.si/', meaning: 'الاستمرارية والثبات', example: 'Consistency beats intensity in building daily habits.' },
+      { category: 'Daily & Habits', word: 'Routine', phonetic: '/ruːˈtiːn/', meaning: 'روتين يومي', example: 'A clear morning routine saves mental energy.' },
+      { category: 'Daily & Habits', word: 'Trigger', phonetic: '/ˈtrɪɡ.ər/', meaning: 'محفّز أو إشارة بدء العادة', example: 'Putting my books on the desk is a study trigger.' },
+      { category: 'Daily & Habits', word: 'Distraction', phonetic: '/dɪˈstræk.ʃən/', meaning: 'مشتّت للانتباه', example: 'Turn off notifications to avoid distraction.' },
+      { category: 'Daily & Habits', word: 'Reward', phonetic: '/rɪˈwɔːrd/', meaning: 'مكافأة', example: 'A small reward helps keep a habit going.' },
+      { category: 'Daily & Habits', word: 'Progress', phonetic: '/ˈprɑː.ɡres/', meaning: 'تقدّم وإنجاز', example: 'Track your daily progress step by step.' },
+      { category: 'Daily & Habits', word: 'Discipline', phonetic: '/ˈdɪs.ə.plɪn/', meaning: 'انضباط ذاتي', example: 'Discipline helps you act even when you feel tired.' },
+      { category: 'Daily & Habits', word: 'Avoid', phonetic: '/əˈvɔɪd/', meaning: 'يتجنّب', example: 'I avoid wasting time on useless scrolling.' },
+
+      // Academic & Study (6 cards)
+      { category: 'Academic & Study', word: 'Anatomy', phonetic: '/əˈnæt.ə.mi/', meaning: 'علم التشريح', example: 'Anatomy studies the structure of living bodies.' },
+      { category: 'Academic & Study', word: 'Lecture', phonetic: '/ˈlek.tʃər/', meaning: 'محاضرة جامعية', example: 'I review every lecture before the final exam.' },
+      { category: 'Academic & Study', word: 'Summary', phonetic: '/ˈsʌm.ər.i/', meaning: 'ملخص', example: 'Write a short summary after each study session.' },
+      { category: 'Academic & Study', word: 'Evidence', phonetic: '/ˈev.ə.dəns/', meaning: 'دليل أو إثبات علمي', example: 'Good decisions should be based on evidence.' },
+      { category: 'Academic & Study', word: 'Compare', phonetic: '/kəmˈper/', meaning: 'يقارن', example: 'Compare the two methods carefully.' },
+      { category: 'Academic & Study', word: 'Explain', phonetic: '/ɪkˈspleɪn/', meaning: 'يشرح أو يوضّح', example: 'Can you explain this concept in simple words?' },
+
+      // Work & Tech (6 cards)
+      { category: 'Work & Tech', word: 'Spreadsheet', phonetic: '/ˈspred.ʃiːt/', meaning: 'جدول بيانات إلكتروني', example: 'I organize tables and formulas in a spreadsheet.' },
+      { category: 'Work & Tech', word: 'Data', phonetic: '/ˈdeɪ.tə/', meaning: 'بيانات', example: 'Clean data makes analysis much easier.' },
+      { category: 'Work & Tech', word: 'Analyze', phonetic: '/ˈæn.əl.aɪz/', meaning: 'يحلّل', example: 'We analyze numbers to find useful patterns.' },
+      { category: 'Work & Tech', word: 'Accurate', phonetic: '/ˈæk.jər.ət/', meaning: 'دقيق وصحيح', example: 'Make sure your calculation is accurate.' },
+      { category: 'Work & Tech', word: 'Skill', phonetic: '/skɪl/', meaning: 'مهارة', example: 'Excel and English are valuable remote skills.' },
+      { category: 'Work & Tech', word: 'Goal', phonetic: '/ɡoʊl/', meaning: 'هدف', example: 'Set clear goals and review them weekly.' }
+    ],
+    lectures: [
+      { id: 101, subject: 'Human Anatomy', title: 'Lecture 1-8: Introduction & Skeletal System', link: '', notes: 'مراجعة أسماء العظام والمفاصل لفاينل ديسمبر', done: true },
+      { id: 102, subject: 'Biophysics', title: 'Artificial Kidneys & Hemodialysis', link: '', notes: 'ملخص البرزنتيشن والقوانين الفيزيائية للغسيل الكلوي', done: true },
+      { id: 103, subject: 'Medical Terminology', title: 'Prefixes, Roots & Suffixes (Body Systems)', link: '', notes: 'تحويل الجذور الطبية لبطاقات Anki', done: false },
+      { id: 104, subject: 'Information Technology', title: 'Attention Economy & Digital Systems', link: '', notes: 'مراجعة البحث والمفاهيم الأساسية', done: false },
+      { id: 105, subject: 'English (1)', title: 'Academic Reading, Vocabulary & Grammar', link: '', notes: 'مراجعة الكلمات والأزمنة الأساسية', done: false },
+      { id: 106, subject: 'Professionalism & Ethics', title: 'Medical Ethics & Patient Rights', link: '', notes: 'مبادئ الأخلاقيات المهنية والسرية الطبية', done: false }
+    ],
+    places: [
+      { id: 1, name: 'جامعة حورس — كلية تكنولوجيا العلوم الصحية التطبيقية', city: 'دمياط الجديدة', lat: 31.4346, lon: 31.6766, query: 'Horus University New Damietta' },
+      { id: 2, name: 'مدينة الزرقا (نقطة الانطلاق والعودة)', city: 'الزرقا، دمياط', lat: 31.2089, lon: 31.6347, query: 'El Zarqa Damietta' },
+      { id: 3, name: 'القهوة المفضلة (استراحة المذاكرة بعد الجامعة)', city: 'الزرقا، دمياط', lat: 31.2105, lon: 31.6360, query: 'Cafe El Zarqa Damietta' },
+      { id: 4, name: 'الجيم ومركز تدريب الكيك بوكسينج', city: 'الزرقا، دمياط', lat: 31.2075, lon: 31.6330, query: 'Gym El Zarqa Damietta' }
+    ],
+    rewards: [
+      { id: 1, title: 'مشاهدة حلقة أنمي (One Piece / Blue Lock)', cost: 40 },
+      { id: 2, title: 'ماتش شطرنج بتركيز أو لفة في Clash of Clans', cost: 30 },
+      { id: 3, title: 'ساعة راحة على القهوة مع كاكاو خام', cost: 50 },
+      { id: 4, title: 'فيلم كوميدي مصري على WATCH IT', cost: 80 }
+    ]
+  };
+
+  let state;
+  try {
+    state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultData));
+  } catch {
+    state = JSON.parse(JSON.stringify(defaultData));
+  }
+
+  let currentCardIndex = 0;
+  let isCardFlipped = false;
+  let timerInterval = null;
+  let timerSeconds = 120;
+  let activeTimerHabitId = null;
+  let currentQuizCard = null;
+  let quizAnswered = false;
+
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+    updatePointsUI();
+  }
+
+  function updatePointsUI() {
+    document.getElementById('pointsDisplay').textContent = `🏆 ${state.points} نقطة`;
+  }
+
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => {
+      el.classList.toggle('active', el.getAttribute('data-tab') === tabName);
+    });
+    const target = document.getElementById(`tab-${tabName}`);
+    if (target) target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  // --- HABITS ---
+  function setDayMode(mode) {
+    state.dayMode = mode;
+    document.getElementById('mode-uni').classList.toggle('active', mode === 'uni');
+    document.getElementById('mode-off').classList.toggle('active', mode === 'off');
+    saveState();
+    renderHabits();
+  }
+
+  function renderHabits() {
+    const list = document.getElementById('habitsList');
+    list.innerHTML = '';
+
+    const filtered = state.habits.filter(h => h.mode === 'both' || h.mode === state.dayMode);
+    const completedCount = filtered.filter(h => h.done).length;
+    const pct = filtered.length ? Math.round((completedCount / filtered.length) * 100) : 0;
+
+    document.getElementById('habitStatsText').textContent = `${completedCount} من ${filtered.length} مهام مكتملة (${pct}%)`;
+    document.getElementById('habitProgress').style.width = `${pct}%`;
+
+    filtered.forEach(h => {
+      const div = document.createElement('div');
+      div.className = `habit-item ${h.done ? 'done' : ''}`;
+      div.innerHTML = `
+        <div class="habit-top">
+          <div class="habit-info">
+            <h4>${h.done ? '✅' : '⬜'} ${escapeHtml(h.title)}</h4>
+            <div class="habit-meta">المكافأة: +${h.points} نقطة</div>
+          </div>
+          <button type="button" class="btn btn-danger btn-sm" data-del-habit="${h.id}">🗑</button>
+        </div>
+        ${h.twoMin ? `<div class="habit-2min">⚡ <strong>قاعدة الدقيقتين:</strong> ${escapeHtml(h.twoMin)}</div>` : ''}
+        <div class="habit-actions">
+          <button type="button" class="btn ${h.done ? 'btn-outline' : 'btn-accent'} btn-sm" data-toggle-habit="${h.id}">
+            ${h.done ? 'تراجع' : '✔ تم الإنجاز'}
+          </button>
+          ${!h.done ? `<button type="button" class="btn btn-warning btn-sm" data-timer-habit="${h.id}">⏱ ابدأ دقيقتين</button>` : ''}
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function toggleHabit(id) {
+    const habit = state.habits.find(h => h.id === id);
+    if (!habit) return;
+    habit.done = !habit.done;
+    state.points += habit.done ? habit.points : -habit.points;
+    if (state.points < 0) state.points = 0;
+    if (activeTimerHabitId === id && habit.done) stopTimer();
+    saveState();
+    renderHabits();
+  }
+
+  function addHabit() {
+    const title = document.getElementById('newHabitTitle').value.trim();
+    const twoMin = document.getElementById('newHabitTwoMin').value.trim();
+    const mode = document.getElementById('newHabitMode').value;
+    const points = parseInt(document.getElementById('newHabitPoints').value, 10) || 15;
+    if (!title) return alert('اكتب اسم العادة أولاً');
+    state.habits.push({ id: Date.now(), title, twoMin, mode, points, done: false });
+    document.getElementById('newHabitTitle').value = '';
+    document.getElementById('newHabitTwoMin').value = '';
+    saveState();
+    renderHabits();
+  }
+
+  function deleteHabit(id) {
+    state.habits = state.habits.filter(h => h.id !== id);
+    saveState();
+    renderHabits();
+  }
+
+  function resetDailyHabits() {
+    if (!confirm('هل تريد تصفير علامات الإنجاز لبدء يوم جديد؟')) return;
+    state.habits.forEach(h => h.done = false);
+    saveState();
+    renderHabits();
+  }
+
+  // --- TIMER ---
+  function startTwoMinTimer(habitId) {
+    const habit = state.habits.find(h => h.id === habitId);
+    if (!habit) return;
+    stopTimer();
+    activeTimerHabitId = habitId;
+    timerSeconds = 120;
+    document.getElementById('timerHabitTitle').textContent = habit.title;
+    document.getElementById('timerBox').classList.add('active');
+    updateTimerDisplay();
+
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      updateTimerDisplay();
+      if (timerSeconds <= 0) finishTimerEarly();
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+    const s = String(timerSeconds % 60).padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+  }
+
+  function finishTimerEarly() {
+    if (activeTimerHabitId !== null) {
+      const habit = state.habits.find(h => h.id === activeTimerHabitId);
+      if (habit && !habit.done) {
+        habit.done = true;
+        state.points += habit.points;
+        saveState();
+        renderHabits();
+      }
+    }
+    stopTimer();
+    alert('عاش يا بطل! أتممت الدقيقتين وحصلت على نقاطك 🎉');
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    activeTimerHabitId = null;
+    document.getElementById('timerBox').classList.remove('active');
+  }
+
+  // --- ENGLISH & TTS & QUIZ ---
+  let preferredVoice = null;
+  function loadVoices() {
+    if (!('speechSynthesis' in window)) return;
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+      preferredVoice =
+        voices.find(v => v.lang === 'en-US' && v.name.includes('Samantha')) ||
+        voices.find(v => v.lang.startsWith('en-US')) ||
+        voices.find(v => v.lang.startsWith('en'));
+      document.getElementById('speechStatus').textContent = `🔊 الصوت جاهز (${preferredVoice ? preferredVoice.lang : 'en-US'})`;
+    }
+  }
+  if ('speechSynthesis' in window) {
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  function speakText(text, rate = 0.95) {
+    if (!('speechSynthesis' in window)) return alert('المتصفح لا يدعم النطق الصوتي');
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = rate;
+    if (preferredVoice) u.voice = preferredVoice;
+    setTimeout(() => window.speechSynthesis.speak(u), 50);
+  }
+
+  function getFilteredCards() {
+    const cat = document.getElementById('enCategoryFilter').value;
+    if (cat === 'ALL') return state.flashcards;
+    const f = state.flashcards.filter(c => c.category === cat);
+    return f.length ? f : state.flashcards;
+  }
+
+  function renderCard() {
+    const cards = getFilteredCards();
+    if (!cards.length) return;
+    if (currentCardIndex >= cards.length) currentCardIndex = 0;
+    const card = cards[currentCardIndex];
+    document.getElementById('fcCategory').textContent = card.category || 'General A2';
+    document.getElementById('fcWord').textContent = card.word;
+    document.getElementById('fcPhonetic').textContent = card.phonetic || '';
+    document.getElementById('fcMeaning').textContent = card.meaning;
+    document.getElementById('fcExample').textContent = card.example || '';
+    document.getElementById('fcCounter').textContent = `${currentCardIndex + 1} / ${cards.length}`;
+    isCardFlipped = false;
+    document.getElementById('fcBack').style.display = 'none';
+  }
+
+  function flipCard() {
+    isCardFlipped = !isCardFlipped;
+    document.getElementById('fcBack').style.display = isCardFlipped ? 'block' : 'none';
+  }
+
+  function nextCard() {
+    const cards = getFilteredCards();
+    currentCardIndex = (currentCardIndex + 1) % cards.length;
+    renderCard();
+  }
+
+  function prevCard() {
+    const cards = getFilteredCards();
+    currentCardIndex = (currentCardIndex - 1 + cards.length) % cards.length;
+    renderCard();
+  }
+
+  function shuffleCards() {
+    for (let i = state.flashcards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [state.flashcards[i], state.flashcards[j]] = [state.flashcards[j], state.flashcards[i]];
+    }
+    currentCardIndex = 0;
+    saveState();
+    renderCard();
+  }
+
+  function masterCard() {
+    state.points += 5;
+    saveState();
+    nextCard();
+  }
+
+  function addFlashcard() {
+    const category = document.getElementById('newEnCategory').value;
+    const word = document.getElementById('newEnWord').value.trim();
+    const meaning = document.getElementById('newEnMeaning').value.trim();
+    const example = document.getElementById('newEnExample').value.trim();
+    if (!word || !meaning) return alert('اكتب الكلمة ومعناها');
+    state.flashcards.unshift({ category, word, phonetic: '', meaning, example });
+    document.getElementById('newEnWord').value = '';
+    document.getElementById('newEnMeaning').value = '';
+    document.getElementById('newEnExample').value = '';
+    currentCardIndex = 0;
+    saveState();
+    renderCard();
+  }
+
+  function generateQuizQuestion() {
+    if (state.flashcards.length < 4) return;
+    quizAnswered = false;
+    document.getElementById('quizFeedback').textContent = '';
+    document.getElementById('quizScoreText').textContent = `إجاباتك الصحيحة: ${state.quizScore || 0} • كل إجابة صحيحة = +10 نقاط`;
+
+    const pool = [...state.flashcards];
+    const target = pool[Math.floor(Math.random() * pool.length)];
+    currentQuizCard = target;
+
+    const distractors = pool
+      .filter(c => c.word !== target.word)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
+
+    const options = [target, ...distractors].sort(() => 0.5 - Math.random());
+    document.getElementById('quizQuestionBox').textContent = `ما معنى كلمة: "${target.word}"؟`;
+
+    const optBox = document.getElementById('quizOptionsBox');
+    optBox.innerHTML = '';
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quiz-option';
+      btn.textContent = opt.meaning;
+      btn.addEventListener('click', () => checkQuizAnswer(btn, opt.word === target.word));
+      optBox.appendChild(btn);
+    });
+  }
+
+  function checkQuizAnswer(clickedBtn, isCorrect) {
+    if (quizAnswered) return;
+    quizAnswered = true;
+    const allBtns = document.querySelectorAll('.quiz-option');
+    allBtns.forEach(b => {
+      if (b.textContent === currentQuizCard.meaning) b.classList.add('correct');
+    });
+    if (isCorrect) {
+      clickedBtn.classList.add('correct');
+      state.points += 10;
+      state.quizScore = (state.quizScore || 0) + 1;
+      saveState();
+      document.getElementById('quizFeedback').textContent = `✅ ممتاز! إجابة صحيحة (+10 نقاط) — مثال: ${currentQuizCard.example}`;
+      document.getElementById('quizScoreText').textContent = `إجاباتك الصحيحة: ${state.quizScore} • كل إجابة صحيحة = +10 نقاط`;
+    } else {
+      clickedBtn.classList.add('wrong');
+      document.getElementById('quizFeedback').textContent = `❌ ليست هذه، المعنى الصحيح هو: ${currentQuizCard.meaning}`;
+    }
+  }
+
+  // --- UNIVERSITY & GPA & CSV ---
+  function renderLectures() {
+    const filter = document.getElementById('subjectFilter').value;
+    const list = document.getElementById('lecturesList');
+    list.innerHTML = '';
+
+    const total = state.lectures.length;
+    const doneCount = state.lectures.filter(l => l.done).length;
+    const pct = total ? Math.round((doneCount / total) * 100) : 0;
+    document.getElementById('uniProgressBadge').textContent = `${pct}% مكتمل`;
+
+    const filtered = filter === 'ALL' ? state.lectures : state.lectures.filter(l => l.subject === filter);
+    if (!filtered.length) {
+      list.innerHTML = `<div class="card" style="text-align:center; color:var(--muted);">لا توجد محاضرات في هذه المادة بعد.</div>`;
+      return;
+    }
+
+    filtered.forEach(lec => {
+      const div = document.createElement('div');
+      div.className = 'lecture-item';
+      div.style.opacity = lec.done ? '0.75' : '1';
+      div.innerHTML = `
+        <div style="flex:1;">
+          <span class="badge">${escapeHtml(lec.subject)}</span>
+          <h4 style="margin-top:6px; font-size:0.95rem;">${lec.done ? '✅' : '📘'} ${escapeHtml(lec.title)}</h4>
+          ${lec.notes ? `<p class="habit-meta" style="margin-top:4px;">📝 ${escapeHtml(lec.notes)}</p>` : ''}
+          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+            <button type="button" class="btn ${lec.done ? 'btn-outline' : 'btn-accent'} btn-sm" data-toggle-lec="${lec.id}">
+              ${lec.done ? 'تمت المذاكرة' : '✔ تحديد كمذاكر (+20 نقطة)'}
+            </button>
+            ${lec.link ? `<a href="${escapeHtml(lec.link)}" target="_blank" class="btn btn-primary btn-sm">🔗 فتح الملف</a>` : ''}
+            <button type="button" class="btn btn-danger btn-sm" data-del-lec="${lec.id}">🗑</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function addLecture() {
+    const subject = document.getElementById('lecSubject').value;
+    const title = document.getElementById('lecTitle').value.trim();
+    const link = document.getElementById('lecLink').value.trim();
+    const notes = document.getElementById('lecNotes').value.trim();
+    if (!title) return alert('اكتب عنوان المحاضرة');
+    state.lectures.unshift({ id: Date.now(), subject, title, link, notes, done: false });
+    document.getElementById('lecTitle').value = '';
+    document.getElementById('lecLink').value = '';
+    document.getElementById('lecNotes').value = '';
+    saveState();
+    renderLectures();
+  }
+
+  function toggleLecture(id) {
+    const lec = state.lectures.find(l => l.id === id);
+    if (!lec) return;
+    lec.done = !lec.done;
+    state.points += lec.done ? 20 : -20;
+    if (state.points < 0) state.points = 0;
+    saveState();
+    renderLectures();
+  }
+
+  function deleteLecture(id) {
+    state.lectures = state.lectures.filter(l => l.id !== id);
+    saveState();
+    renderLectures();
+  }
+
+  async function syncFromGoogleSheetCsv() {
+    const url = document.getElementById('csvSheetUrl').value.trim();
+    if (!url) return alert('الصق رابط Google Sheet CSV أولاً');
+    state.csvSheetUrl = url;
+    saveState();
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
+      const rows = text.split('
+').slice(1).filter(r => r.trim());
+      let added = 0;
+      rows.forEach(row => {
+        const cols = row.split(',');
+        if (cols.length >= 2) {
+          const subject = cols[0].trim();
+          const title = cols[1].trim();
+          const link = cols[2] ? cols[2].trim() : '';
+          if (title && !state.lectures.some(l => l.title === title && l.subject === subject)) {
+            state.lectures.unshift({ id: Date.now() + Math.random(), subject, title, link, notes: 'مزامنة تلقائية', done: false });
+            added++;
+          }
+        }
+      });
+      saveState();
+      renderLectures();
+      alert(`تمت المزامنة! تمت إضافة ${added} محاضرة جديدة.`);
+    } catch {
+      alert('تعذر الاتصال بالرابط. تأكد أن الشيت منشور للعامة بصيغة CSV.');
+    }
+  }
+
+  function renderGpaCalculator() {
+    const subjects = [
+      { name: 'Human Anatomy (3 ساعات)', credits: 3 },
+      { name: 'Biophysics (3 ساعات)', credits: 3 },
+      { name: 'Medical Terminology (2 ساعتان)', credits: 2 },
+      { name: 'Information Technology (2 ساعتان)', credits: 2 },
+      { name: 'English (1) (2 ساعتان)', credits: 2 },
+      { name: 'Professionalism & Ethics (2 ساعتان)', credits: 2 },
+      { name: 'Innovation & Thinking (2 ساعتان)', credits: 2 },
+      { name: 'Social Issues (2 ساعتان)', credits: 2 }
+    ];
+    const container = document.getElementById('gpaInputs');
+    container.innerHTML = '';
+    subjects.forEach(sub => {
+      const div = document.createElement('div');
+      div.style.display = 'flex';
+      div.style.justifyContent = 'space-between';
+      div.style.alignItems = 'center';
+      div.style.gap = '8px';
+      div.innerHTML = `
+        <span style="font-size:0.84rem; flex:1;">${sub.name}</span>
+        <select class="gpa-grade" data-credits="${sub.credits}" style="max-width:120px;">
+          <option value="4.0">A+ (4.0)</option>
+          <option value="3.7">A (3.7)</option>
+          <option value="3.3">B+ (3.3)</option>
+          <option value="3.0" selected>B (3.0)</option>
+          <option value="2.7">C+ (2.7)</option>
+          <option value="2.3">C (2.3)</option>
+          <option value="2.0">D (2.0)</option>
+        </select>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function calculateHUEGPA() {
+    let totalPoints = 0, totalCredits = 0;
+    document.querySelectorAll('.gpa-grade').forEach(sel => {
+      totalPoints += parseFloat(sel.value) * parseInt(sel.getAttribute('data-credits'), 10);
+      totalCredits += parseInt(sel.getAttribute('data-credits'), 10);
+    });
+    const gpa = (totalPoints / totalCredits).toFixed(2);
+    const box = document.getElementById('gpaResultBox');
+    box.style.display = 'block';
+    box.innerHTML = `<div style="font-size:0.85rem; color:var(--muted);">المعدل التراكمي المتوقع (18 ساعة معتمدة)</div>
+                     <div style="font-size:1.6rem; font-weight:800; color:var(--primary);">${gpa} / 4.00</div>`;
+  }
+
+  // --- MAPS ---
+  function renderPlaces() {
+    const list = document.getElementById('placesList');
+    list.innerHTML = '';
+    state.places.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'place-card';
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.query || p.name)}`;
+      const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.query || p.name)}`;
+      div.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+          <div>
+            <div style="font-weight:700; font-size:0.95rem;">📍 ${escapeHtml(p.name)}</div>
+            <div class="habit-meta">${escapeHtml(p.city)}</div>
+          </div>
+          <button type="button" class="btn btn-danger btn-sm" data-del-place="${p.id}">🗑</button>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+          ${p.lat && p.lon ? `<button type="button" class="btn btn-outline btn-sm" data-focus-lat="${p.lat}" data-focus-lon="${p.lon}" data-focus-name="${escapeHtml(p.name)}">👁 عرض بالخريطة</button>` : ''}
+          <a href="${mapsUrl}" target="_blank" class="btn btn-primary btn-sm">🗺️ خرائط جوجل</a>
+          <a href="${dirUrl}" target="_blank" class="btn btn-accent btn-sm">🧭 اتجاهات الوصول</a>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function focusMap(lat, lon, label) {
+    const delta = 0.015;
+    const bbox = `${lon - delta}%2C${lat - delta}%2C${lon + delta}%2C${lat + delta}`;
+    document.getElementById('mapIframe').src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
+    document.getElementById('gpsStatus').textContent = `📌 معروض الآن: ${label}`;
+  }
+
+  function locateMe() {
+    const status = document.getElementById('gpsStatus');
+    if (!navigator.geolocation) return status.textContent = '⚠️ المتصفح لا يدعم تحديد الموقع.';
+    status.textContent = '⏳ جاري تحديد موقعك...';
+    navigator.geolocation.getCurrentPosition(
+      pos => focusMap(pos.coords.latitude, pos.coords.longitude, `موقعي الحالي (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`),
+      () => status.textContent = '⚠️ تعذر الوصول للموقع. تأكد من تفعيل GPS.'
+    );
+  }
+
+  function addSavedPlace() {
+    const name = document.getElementById('newPlaceName').value.trim();
+    const city = document.getElementById('newPlaceCity').value.trim() || 'دمياط';
+    const query = document.getElementById('newPlaceQuery').value.trim() || `${name} ${city}`;
+    if (!name) return alert('اكتب اسم المكان');
+    state.places.push({ id: Date.now(), name, city, query });
+    document.getElementById('newPlaceName').value = '';
+    document.getElementById('newPlaceCity').value = '';
+    document.getElementById('newPlaceQuery').value = '';
+    saveState();
+    renderPlaces();
+  }
+
+  function deletePlace(id) {
+    state.places = state.places.filter(p => p.id !== id);
+    saveState();
+    renderPlaces();
+  }
+
+  // --- AI ---
+  function updateAiStatusUI() {
+    document.getElementById('aiEngineStatus').textContent = state.geminiApiKey
+      ? '🟢 متصل بمحرك Google Gemini API السحابي'
+      : '⚡ يعمل بالمحرك الذكي المدمج (أوفلاين/أونلاين بدون مفتاح)';
+  }
+
+  async function callSmartAI(promptText) {
+    if (state.geminiApiKey) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(state.geminiApiKey)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: "أنت مساعد دراسي وتنظيمي ذكي للطالب ومطور التطبيق علي هاني العجيري (طالب مستوى أول كلية تكنولوجيا العلوم الصحية التطبيقية جامعة حورس، مستواه A2 في الإنجليزية، ويطبق كتاب العادات الذرية). أجب بالعربية بأسلوب عملي ومختصر وواضح." }]
+            },
+            contents: [{ parts: [{ text: promptText }] }]
+          })
+        });
+        const data = await res.json();
+        if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) return data.candidates[0].content.parts[0].text;
+      } catch {}
+    }
+    return builtInIntelligentResponder(promptText);
+  }
+
+  function builtInIntelligentResponder(q) {
+    const lower = q.toLowerCase();
+    const medDict = {
+      'anterior': 'Anterior (أمامي): مقدمة الجسم. مثال: عظمة القص (Sternum) أمامية.',
+      'posterior': 'Posterior (خلفي): ظهر الجسم. مثال: العمود الفقري خلفي.',
+      'superior': 'Superior (علوي): أقرب للرأس. مثال: الرأس Superior للرقبة.',
+      'inferior': 'Inferior (سفلي): أبعد عن الرأس. مثال: المعدة Inferior للرئتين.',
+      'proximal': 'Proximal (قريب): أقرب لاتصال الطرف بالجذع. مثال: الكوع Proximal للرسغ.',
+      'distal': 'Distal (بعيد): أبعد عن اتصال الطرف بالجذع. مثال: الأصابع Distal للكوع.',
+      'hemodialysis': 'Hemodialysis (الغسيل الكلوي الدموي): تنقية الدم عبر جهاز الكلى الصناعية بالانتشار والترشيح الفائق.',
+      'osmosis': 'Osmosis (الأسموزية): انتقال الماء عبر غشاء شبه منفذ من التركيز الأقل للأملاح إلى الأعلى.',
+      'ultrasound': 'Ultrasound (السونار): تصوير بالموجات فوق الصوتية بدون إشعاع مؤين.'
+    };
+    for (const [k, v] of Object.entries(medDict)) {
+      if (lower.includes(k)) return `🩺 **شرح المصطلح:**
+${v}`;
+    }
+    if (lower.includes('قواعد') || lower.includes('grammar')) {
+      return `📘 **قواعد سريعة لمستوى A2:**
+1. المضارع البسيط (Present Simple): للعادات والحقائق. مع He/She/It نضيف s (He studies daily).
+2. الماضي البسيط (Past Simple): لحدث انتهى في الماضي (I studied yesterday).
+3. حروف الجر للوقت: at للساعة، on للأيام، in للشهور والسنوات.`;
+    }
+    if (lower.includes('مصطلح') || lower.includes('تشريح') || lower.includes('anatomy') || lower.includes('biophysics')) {
+      return `🩺 **مصطلحات مهمة:**
+• Anterior / Posterior (أمامي / خلفي)
+• Superior / Inferior (علوي / سفلي)
+• Proximal / Distal (قريب / بعيد)
+اكتب أي مصطلح إنجليزي مثل Osmosis أو Ultrasound وهشرحهولك.`;
+    }
+    if (lower.includes('كلمات') || lower.includes('انجليزي') || lower.includes('a2')) {
+      return `🇬🇧 **5 كلمات A2:**
+1. Symptom (عَرَض): Fever is a symptom.
+2. Treatment (علاج): Good treatment helps.
+3. Scan (فحص أشعة): CT scan is clear.
+4. Prevent (يمنع): Habits prevent bad days.
+5. Measure (يقيس): Measure your progress daily.`;
+    }
+    if (lower.includes('خطة') || lower.includes('فاينل') || lower.includes('ديسمبر') || lower.includes('مذاكرة')) {
+      return `📅 **خطة فاينل 12 ديسمبر:**
+• أيام الجامعة: محاضرة واحدة بتركيز 45 دقيقة بعد الراحة.
+• أيام الإجازة: بلوك لـ Anatomy/Biophysics وبلوك للمواد الأخف.
+• وقت الكسل: مؤقت الدقيقتين واقرأ أول صفحتين فقط.`;
+    }
+    if (lower.includes('كسلان') || lower.includes('مش قادر') || lower.includes('دقيقتين')) {
+      return `⚡ شغل مؤقت الدقيقتين على أي مهمة واقرأ أول صفحة بس عشان تكسر حاجز البداية.`;
+    }
+    return `🤖 سؤالك: "${q}"
+اسألني عن مصطلح طبي، قواعد إنجليزي A2، كلمات A2، خطة مذاكرة، أو أضف مفتاح Gemini API من الإعدادات.`;
+  }
+
+  function appendChatMessage(text, isUser = false) {
+    const box = document.getElementById('aiChatBox');
+    const div = document.createElement('div');
+    div.className = `msg ${isUser ? 'msg-user' : 'msg-ai'}`;
+    div.textContent = text;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  async function handleAiSend() {
+    const input = document.getElementById('aiUserInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    appendChatMessage(text, true);
+    const btn = document.getElementById('aiSendBtn');
+    btn.disabled = true;
+    const reply = await callSmartAI(text);
+    appendChatMessage(reply, false);
+    btn.disabled = false;
+  }
+
+  async function aiGenerateTwoMin() {
+    const title = document.getElementById('newHabitTitle').value.trim();
+    if (!title) return alert('اكتب اسم العادة الأول!');
+    let s = `ابدأ بأول خطوة بسيطة في "${title}" لمدة دقيقتين فقط`;
+    if (title.includes('مذاكرة') || title.includes('محاضرة')) s = 'افتح ملف المحاضرة واقرأ أول صفحة فقط';
+    else if (title.includes('تمرين') || title.includes('جيم') || title.includes('بطن')) s = 'البس لبس التمرين واعمل 10 عدات إحماء';
+    else if (title.includes('قراءة') || title.includes('كتاب')) s = 'اقرأ صفحة واحدة فقط بتركيز';
+    else if (title.includes('انجليزي') || title.includes('كلمات')) s = 'اسمع وانطق 3 كلمات إنجليزي فقط';
+    document.getElementById('newHabitTwoMin').value = s;
+  }
+
+  async function aiAutoFillWord() {
+    const word = document.getElementById('newEnWord').value.trim();
+    if (!word) return alert('اكتب الكلمة بالإنجليزية الأول!');
+    const bank = {
+      'skeleton': { m: 'الهيكل العظمي', ex: 'The human skeleton protects vital organs.' },
+      'muscle': { m: 'عضلة', ex: 'Exercise makes muscles stronger.' },
+      'kidney': { m: 'كُلية', ex: 'Each kidney filters waste from blood.' },
+      'radiation': { m: 'إشعاع', ex: 'Radiology uses controlled radiation.' },
+      'ultrasound': { m: 'الموجات فوق الصوتية', ex: 'Ultrasound is safe and painless.' }
+    };
+    const item = bank[word.toLowerCase()] || { m: `ترجمة (${word})`, ex: `We studied "${word}" in class today.` };
+    document.getElementById('newEnMeaning').value = item.m;
+    document.getElementById('newEnExample').value = item.ex;
+  }
+
+  // --- REWARDS & BACKUP ---
+  function renderRewards() {
+    const list = document.getElementById('rewardsList');
+    list.innerHTML = '';
+    state.rewards.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'lecture-item';
+      div.innerHTML = `
+        <div>
+          <div style="font-weight:700; font-size:0.95rem;">${escapeHtml(r.title)}</div>
+          <div class="habit-meta">التكلفة: ${r.cost} نقطة</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn btn-primary btn-sm" data-redeem-reward="${r.id}">استبدال</button>
+          <button type="button" class="btn btn-danger btn-sm" data-del-reward="${r.id}">🗑</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function redeemReward(id) {
+    const reward = state.rewards.find(r => r.id === id);
+    if (!reward) return;
+    if (state.points < reward.cost) return alert(`نقاطك (${state.points}) غير كافية. تحتاج ${reward.cost - state.points} نقطة.`);
+    if (!confirm(`استبدال ${reward.cost} نقطة مقابل "${reward.title}"؟`)) return;
+    state.points -= reward.cost;
+    saveState();
+    alert(`مبروك يا علي! استمتع بمكافأتك: ${reward.title} 🎉`);
+  }
+
+  function addReward() {
+    const title = document.getElementById('newRewardTitle').value.trim();
+    const cost = parseInt(document.getElementById('newRewardCost').value, 10) || 50;
+    if (!title) return alert('اكتب اسم المكافأة');
+    state.rewards.push({ id: Date.now(), title, cost });
+    document.getElementById('newRewardTitle').value = '';
+    saveState();
+    renderRewards();
+  }
+
+  function deleteReward(id) {
+    state.rewards = state.rewards.filter(r => r.id !== id);
+    saveState();
+    renderRewards();
+  }
+
+  function exportData() {
+    const payload = { developer: 'علي هاني العجيري', app: 'نظامي Pro', exportedAt: new Date().toISOString(), data: state };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nizami-pro-ali-elegiry-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        const imported = parsed.data || parsed;
+        if (imported && typeof imported.points === 'number') {
+          state = imported;
+          saveState();
+          initApp();
+          alert('تم استيراد البيانات بنجاح!');
+        }
+      } catch { alert('ملف غير صالح'); }
+    };
+    reader.readAsText(file);
+  }
+
+  function resetFactoryData() {
+    if (!confirm('هل تريد استعادة الـ 30 بطاقة إنجليزي والمحتوى الافتراضي المحدث؟')) return;
+    state = JSON.parse(JSON.stringify(defaultData));
+    currentCardIndex = 0;
+    saveState();
+    initApp();
+    alert('تم تحديث المحتوى الافتراضي بنجاح!');
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+
+  function bindEvents() {
+    document.getElementById('bottomNav').addEventListener('click', e => {
+      const btn = e.target.closest('.nav-btn');
+      if (btn && btn.dataset.tab) switchTab(btn.dataset.tab);
+    });
+
+    document.getElementById('mode-uni').addEventListener('click', () => setDayMode('uni'));
+    document.getElementById('mode-off').addEventListener('click', () => setDayMode('off'));
+    document.getElementById('resetDayBtn').addEventListener('click', resetDailyHabits);
+    document.getElementById('timerDoneBtn').addEventListener('click', finishTimerEarly);
+    document.getElementById('timerStopBtn').addEventListener('click', stopTimer);
+    document.getElementById('addHabitBtn').addEventListener('click', addHabit);
+    document.getElementById('aiTwoMinBtn').addEventListener('click', aiGenerateTwoMin);
+
+    document.getElementById('habitsList').addEventListener('click', e => {
+      const tBtn = e.target.closest('[data-toggle-habit]');
+      if (tBtn) return toggleHabit(Number(tBtn.dataset.toggleHabit));
+      const mBtn = e.target.closest('[data-timer-habit]');
+      if (mBtn) return startTwoMinTimer(Number(mBtn.dataset.timerHabit));
+      const dBtn = e.target.closest('[data-del-habit]');
+      if (dBtn) return deleteHabit(Number(dBtn.dataset.delHabit));
+    });
+
+    document.getElementById('enCategoryFilter').addEventListener('change', () => {
+      currentCardIndex = 0;
+      renderCard();
+    });
+    document.getElementById('flashcardBox').addEventListener('click', flipCard);
+    document.getElementById('speakWordBtn').addEventListener('click', () => speakText(getFilteredCards()[currentCardIndex]?.word || '', 0.92));
+    document.getElementById('speakExampleBtn').addEventListener('click', () => speakText(getFilteredCards()[currentCardIndex]?.example || '', 0.92));
+    document.getElementById('speakSlowBtn').addEventListener('click', () => speakText(getFilteredCards()[currentCardIndex]?.word || '', 0.6));
+    document.getElementById('shuffleCardsBtn').addEventListener('click', shuffleCards);
+    document.getElementById('prevCardBtn').addEventListener('click', prevCard);
+    document.getElementById('nextCardBtn').addEventListener('click', nextCard);
+    document.getElementById('masterCardBtn').addEventListener('click', masterCard);
+    document.getElementById('newQuizBtn').addEventListener('click', generateQuizQuestion);
+    document.getElementById('aiEnBtn').addEventListener('click', aiAutoFillWord);
+    document.getElementById('addCardBtn').addEventListener('click', addFlashcard);
+
+    document.getElementById('subjectFilter').addEventListener('change', renderLectures);
+    document.getElementById('addLectureBtn').addEventListener('click', addLecture);
+    document.getElementById('syncCsvBtn').addEventListener('click', syncFromGoogleSheetCsv);
+    document.getElementById('calcGpaBtn').addEventListener('click', calculateHUEGPA);
+    document.getElementById('lecturesList').addEventListener('click', e => {
+      const tBtn = e.target.closest('[data-toggle-lec]');
+      if (tBtn) return toggleLecture(Number(tBtn.dataset.toggleLec));
+      const dBtn = e.target.closest('[data-del-lec]');
+      if (dBtn) return deleteLecture(Number(dBtn.dataset.delLec));
+    });
+
+    document.getElementById('locateMeBtn').addEventListener('click', locateMe);
+    document.getElementById('addPlaceBtn').addEventListener('click', addSavedPlace);
+    document.getElementById('placesList').addEventListener('click', e => {
+      const fBtn = e.target.closest('[data-focus-lat]');
+      if (fBtn) return focusMap(Number(fBtn.dataset.focusLat), Number(fBtn.dataset.focusLon), fBtn.dataset.focusName);
+      const dBtn = e.target.closest('[data-del-place]');
+      if (dBtn) return deletePlace(Number(dBtn.dataset.delPlace));
+    });
+
+    document.getElementById('toggleAiSettingsBtn').addEventListener('click', () => {
+      const box = document.getElementById('aiSettingsBox');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+      document.getElementById('geminiApiKeyInput').value = state.geminiApiKey || '';
+    });
+    document.getElementById('saveApiKeyBtn').addEventListener('click', () => {
+      state.geminiApiKey = document.getElementById('geminiApiKeyInput').value.trim();
+      saveState();
+      updateAiStatusUI();
+      document.getElementById('aiSettingsBox').style.display = 'none';
+      alert('تم الحفظ!');
+    });
+    document.getElementById('aiSendBtn').addEventListener('click', handleAiSend);
+    document.getElementById('aiUserInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleAiSend();
+    });
+    document.querySelector('.quick-prompts').addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (chip && chip.dataset.prompt) {
+        document.getElementById('aiUserInput').value = chip.dataset.prompt;
+        handleAiSend();
+      }
+    });
+
+    document.getElementById('addRewardBtn').addEventListener('click', addReward);
+    document.getElementById('rewardsList').addEventListener('click', e => {
+      const rBtn = e.target.closest('[data-redeem-reward]');
+      if (rBtn) return redeemReward(Number(rBtn.dataset.redeemReward));
+      const dBtn = e.target.closest('[data-del-reward]');
+      if (dBtn) return deleteReward(Number(dBtn.dataset.delReward));
+    });
+    document.getElementById('exportDataBtn').addEventListener('click', exportData);
+    document.getElementById('importDataInput').addEventListener('change', importData);
+    document.getElementById('resetFactoryBtn').addEventListener('click', resetFactoryData);
+  }
+
+  function initApp() {
+    updatePointsUI();
+    updateAiStatusUI();
+    if (state.csvSheetUrl) document.getElementById('csvSheetUrl').value = state.csvSheetUrl;
+    document.getElementById('mode-uni').classList.toggle('active', state.dayMode === 'uni');
+    document.getElementById('mode-off').classList.toggle('active', state.dayMode === 'off');
+    renderHabits();
+    renderCard();
+    generateQuizQuestion();
+    renderLectures();
+    renderGpaCalculator();
+    renderPlaces();
+    renderRewards();
+  }
+
+  bindEvents();
+  initApp();
+</script>
+</body>
+</html>
